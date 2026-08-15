@@ -1,5 +1,27 @@
 # Changelog – Galton Board
 
+## [V07] – 2026-08-15
+
+### Änderungen (User-Wünsche)
+
+- **Leertaste-Button entfernt:** Der `<button>␣ Leertaste` aus V06 ist wieder entfernt
+  (sowie sein `el.btnSpace`-Binding und der Event-Listener). Nur die physische
+  Space-Taste funktioniert weiterhin.
+- **Buttons in einer Zeile:** Start, Pause, Reset stehen jetzt nebeneinander.
+  `.btns` auf `flex-wrap:nowrap`, Button-Padding 10px/16px, Schrift 0.88rem – passt
+  in eine Zeile (auch auf Tablet-Breite).
+- **Footer bereinigt:** „erstellt mit Hermes Agent (Nous Research) · Projektordner:
+  ~/Projects/Galton Board/" entfernt. Footer zeigt nur noch „Galton Board V07 ·
+  Edle Simulation mit realer Quincunx-Physik".
+- Hinweis-Text angepasst („Leertaste pausiert/startet …" – ohne Button-Erwähnung).
+
+### Verifikation V07
+- Statisch: Script-Balance ✅, node --check ✅, 33 IDs ✅
+- Volllauf 300/12: μ=5.91, σ=1.70, χ²=3.30 ✅
+- Volllauf 600/12: μ=5.87, σ=1.66, χ²=12.24 ✅
+- Browser: 3 Buttons nebeneinander, kein Leertaste-Button, Footer bereinigt ✅
+
+---
 ## [V06] – 2026-08-15
 
 ### Änderungen (User-Wünsche)
