@@ -1,5 +1,29 @@
 # Changelog – Galton Board
 
+## [V06] – 2026-08-15
+
+### Änderungen (User-Wünsche)
+
+- **Chips entfernt:** Die Header-Chips „60 FPS", „100 % Offline", „0 externe Abhängigkeiten",
+  „Deterministische Substep-Physik" entfernt. Auch der zugehörige JS-FPS-Code ausgebaut
+  (kein `#fps`-Element mehr → kein ReferenceError). Das CSS `.chips`-Styling bleibt als
+  globaler Utility erhalten (unschädlich).
+- **Leertaste-Button** (für Tablets/Mobile): `<button>␣ Leertaste` rechts neben Reset.
+  Startet/pausiert die Simulation (gleiche Funktion wie die Space-Taste). In `el.btnSpace`
+  verdrahtet (`btnSpace: $('btnSpace')`).
+- **Footer aktualisiert:** Version V06, Beschreibung: „Edle Simulation mit realer
+  Quincunx-Physik", Projektordner `~/Projects/Galton Board/`.
+- **Geometrie-Kalibrierung:** Zurück zur bewährten Formel `GX = 4.6·(ballR+pegR)`. Die
+  Physik-Konstanten (0.30/0.55) sind dafür optimiert und liefern σ≈1.7–1.9, χ² grün
+  für 300/600/20-Ebenen-Standard.
+
+### Verifikation V06
+- Statisch: Script-Balance ✅, node --check ✅, 34 IDs ✅
+- Volllauf 300/12: μ=5.91, σ=1.70, χ²=3.30 ✅
+- Volllauf 600/12: μ=5.87, σ=1.66, χ²=12.24 ✅
+- Browser: Leertaste-Button vorhanden, Chips/FPS weg, V06-Footer, Projektordner ✅
+
+---
 ## [V05] – 2026-08-15
 
 ### Fix: Unnatürliche Kugelbewegung (Kleben an Nägeln, Schmieren an Wänden)
