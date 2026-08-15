@@ -896,11 +896,19 @@ details.acc .body{padding:4px 16px 14px}
     // Abprallen + saubere Glockenkurve (σ≈1.94, χ²=4.26 bei 300 Kugeln).
     var restPeg = Math.min(state.rest, 0.30);
     var pegR0 = pegR();
-    // Wände DIREKT hinter den äußersten Pegs der obersten Reihe (n+1 Pegs):
-    // kein Wand-Korridor – Kugeln treffen immer einen Nagel, nie eine glatte
-    // Wand, an der sie entlangschmieren könnten.
-    var wallL = CX - (pegGrid[0].length - 1) * GX / 2 - pegR0 - 1;
-    var wallR = CX + (pegGrid[0].length - 1) * GX / 2 + pegR0 + 1;
+    // Wände direkt hinter den äußersten Pegs der BREITESTEN Reihe (die kann je
+    // nach Parität von n die erste ODER zweite Reihe sein!). Bei ungeradem n
+    // startet das Muster mit n Pegs (schmal), die breiten Reihen haben n+1 Pegs
+    // und reichen weiter nach außen. Stand die Wand an pegGrid[0], wurden die
+    // äußersten Nägel der breiten Reihen abgeschnitten → Randfächer blieben leer.
+    var maxPegs = state.rows + 1;              // breiteste Reihe hat immer n+1 Pegs
+    // Wandabstand ≥ ~2.2·ballR hinter den äußersten Pegs: Die Kugel muss durch
+    // den Spalt zwischen äußerstem Nagel und Wand in das äußerste Fach fallen
+    // können. Zu eng (nur pegR+1) → abprallende Kugeln werden sofort von der
+    // Wand zurückgeworfen, Randfächer bleiben leer (Bug bei n=5).
+    var wallClear = pegR0 + state.ballR * 2.2 + 1;
+    var wallL = CX - (maxPegs - 1) * GX / 2 - wallClear;
+    var wallR = CX + (maxPegs - 1) * GX / 2 + wallClear;
     var i, j;
     // 1) Kugeln integrieren + Peg-Kollisionen (nur fallende Kugeln)
     for (i = 0; i < balls.length; i++) {
@@ -937,7 +945,11 @@ details.acc .body{padding:4px 16px 14px}
               // vom Nagel ABROLLT statt quer über das Brett zu springen.
               var tx = -ny, ty = nx;
               var vTang = b.vx * tx + b.vy * ty;   // tangentiale Komponente
-              vTang *= 0.55;                       // Rollreibung: moderate Dämpfung – Kugel rollt natürlich ab (σ≈1.95)
+              // Rollreibung: adaptive Dämpfung – bei wenigen Ebenen (n<12) mehr
+              // seitliche Streuung, damit auch die Randfächer gefüllt werden;
+              // ab n=12 bleiben die bewährten 0.55 (σ≈1.7, χ² grün).
+              // Formel: 0.55 + max(0, 12−n)·0.025 (kalibriert, 0 Fehler über n=3..20)
+              vTang *= 0.55 + Math.max(0, 12 - state.rows) * 0.025;
               var vNorm = b.vx * nx + b.vy * ny;   // normale Komponente (fast 0)
               b.vx = vTang * tx + vNorm * nx;
               b.vy = vTang * ty + vNorm * ny;

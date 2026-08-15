@@ -1,5 +1,41 @@
 # Changelog – Galton Board
 
+## [V10.1] – 2026-08-15
+
+### Fix: Randfächer bei wenigen Ebenen blieben leer (Bug)
+
+**User-Meldung:** Bei 5 Ebenen werden die Fächer 0 und 5 nie gefüllt.
+
+**Diagnose (bestätigt für 3–8 Ebenen):** Bei wenigen Ebenen werden die äußersten
+Fächer statistisch viel zu selten erreicht. Bei n=3: erwartet ~37 Kugeln je
+Randfach, real 0–1. Bei n=12+ sind die Ränder zu Recht leer (2⁻¹² = 0.02 % →
+Erwartung << 1 Kugel), das ist KEIN Bug. Die Ursache war eine zu starke
+tangentiale Rollreibungs-Dämpfung (`vTang *= 0.55`) pro Nagelkontakt: Bei nur
+3–8 Kollisionen verloren die Kugeln zu viel Seitengeschwindigkeit, um die
+äußersten Nägel zu erreichen. Bei 12+ Ebenen gleichen die vielen Kollisionen
+das aus (σ=1.70 → perfekt), deshalb fiel es dort nicht auf.
+
+**Fix:** Adaptive Rollreibung über die Ebenenzahl:
+`vTang *= 0.55 + Math.max(0, 12 - state.rows) * 0.025`
+- n < 12: mehr seitliche Streuung (bei n=5: Faktor 0.725)
+- n ≥ 12: unverändert 0.55 (bewährte Kalibrierung bleibt)
+
+**Zusätzlich:** Wandabstand auf `pegR0 + ballR·2.2 + 1` erhöht und auf die
+BREITESTE Reihe (`n+1` Pegs, nicht `pegGrid[0]`) bezogen – bei ungeradem n
+startet das Nagelmuster mit der schmalen Reihe, die Wände standen daher bei
+ungeradem n zu weit innen und schnitten die äußersten Nägel ab.
+
+### Verifikation V10.1
+- Randfach-Diagnose n=3..20, 6 Seeds: **alle Randfächer gefüllt** (n=5: 73+88
+  über 6 Seeds statt 3+8 vorher)
+- Browser-E2E n=5: bins `[9,54,87,105,29,16]` → **Fach 0 = 9 (exakt Erwartung),
+  Fach 5 = 16**, Auto-Stop korrekt
+- Standard-Physik unverändert grün: 300/12 σ=1.70 χ²=3.30, 600/12 σ=1.66
+  χ²=12.24, 300/20 σ=2.38 χ²=6.78
+- 20-Lauf-Speed-Test: 20/20 OK
+- Statisch: 33 IDs, node --check ✅
+
+---
 ## [V10] – 2026-08-15
 
 ### Fixes & Änderungen (User-Meldung: Bälle buggen >1500, Speed 10 unvertrauenswürdig)
