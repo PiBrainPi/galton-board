@@ -151,14 +151,13 @@ if (G.balls.length > 0) {
 
 // --- Ergebnisse einsammeln ---
 const bins = G.bins.slice();
-const rest = G.restList.length;
+const rest = G.dropped;                // V03: keine restList mehr – Zähler nutzen
 if (rest !== total) {
   console.error(`FEHLER: nur ${rest}/${total} Kugeln gelandet`);
   process.exit(1);
 }
 let nanCount = 0;
 G.balls.forEach(b => { if (!isFinite(b.x) || !isFinite(b.y) || !isFinite(b.vx) || !isFinite(b.vy)) nanCount++; });
-G.restList.forEach(b => { if (!isFinite(b.x) || !isFinite(b.y)) nanCount++; });
 if (nanCount > 0) { console.error(`FEHLER: ${nanCount} NaN-Positionen`); process.exit(1); }
 
 // --- Statistik ---

@@ -1,5 +1,23 @@
 # Changelog – Galton Board
 
+## [V03] – 2026-08-15
+
+### Änderung (auf User-Wunsch)
+
+- **Keine Fächer-Stapel-Animation mehr:** Kugeln verschwinden nach Durchlaufen der
+  letzten Nagelreihe (kein Auftürmen, kein Überlaufen in den oberen Bereich mehr).
+- Die Fach-Statistik wird weiterhin korrekt gezählt → Live-Histogramm mit der
+  Gaussschen Glockenkurve ist jetzt die alleinige Ergebnis-Darstellung.
+- Brett-Höhe endet kompakt direkt unter der letzten Ebene (H ≈ 454 statt 693).
+- Fächer-Trennwände/Nummern im Brett entfernt – nur dezente Bodenlinie.
+- Harness `verify_physics.js` auf `dropped` (statt `restList.length`) umgestellt.
+
+### Verifikation V03
+- Statisch: Script-Balance ✅, node --check ✅, 34 IDs ✅
+- Physik (300 Kugeln, 12 Ebenen): μ=6.12 (Soll 6.0), σ=1.95 (Soll 1.73), χ²=8.69 ✅
+- Browser-E2E: 300 gelandet, restList=0 (kein Stapel), keine aktiven Kugeln, H=454 ✅
+
+---
 ## [V02] – 2026-08-15
 
 ### Fixes (auf User-Feedback)
