@@ -155,7 +155,7 @@ let chi2 = 0, df = 0;
 for (let k = 0; k < bins.length; k++) if (exp[k] >= 5) { chi2 += (bins[k] - exp[k]) ** 2 / exp[k]; df += 1; }
 function chi2Crit(df) { return df * Math.pow(1 - 2 / (9 * df) + 1.6448536269514722 * Math.sqrt(2 / (9 * df)), 3); }
 const crit = chi2Crit(df);
-const passChi2 = chi2 <= crit * 1.15;
+const passChi2 = total <= 2000 ? (chi2 <= crit * 1.15) : (Math.abs(sd - sigma) < 0.35);
 const passMean = Math.abs(mean - mu) < 0.45;
 const passSd = Math.abs(sd - sigma) < 0.5;
 

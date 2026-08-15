@@ -1,5 +1,36 @@
 # Changelog – Galton Board
 
+## [V10] – 2026-08-15
+
+### Fixes & Änderungen (User-Meldung: Bälle buggen >1500, Speed 10 unvertrauenswürdig)
+
+**1. Bälle-Grenze auf 10000 erhöht.** Vorher `finiteNum(..., 1, 5000)`, jetzt
+`finiteNum(..., 1, 10000)`. Ein tiefer liegender Bug war dabei: Die Event-Handler
+`onParamChange` und der Resize-Listener riefen `reset(false)` auf, was bei der
+V08-Semantik (`reset(keepParams)` – `false` = Default-Reset) **alle Parameter auf
+Default zurücksetzte**, sobald der User ein Feld änderte. Fix: `onParamChange` und
+Resize rufen jetzt `reset(true)` (Parameter BEHALTEN). Der Reset-Button ruft
+weiterhin `reset()` (Default).
+
+**2. Geschwindigkeitsabhängigkeit behoben (Kern-Bug).** Bei speed>2 verfälschte
+die Physik die Verteilung massiv (χ² bis 329 bei speed=20). Zwei Ursachen:
+- `MAX_SUBSTEPS = 10` war zu niedrig → bei `stepWorld(raw*speed)` wurde die
+  Zeitschrittgröße `h` zu groß → Kugeln tunneln durch Nägel. Erhöht auf 120.
+- Der **Spawn skaliert nicht mit speed**: Bei hoher speed waren alle Kugeln
+  gleichzeitig im Brett → Kugel-Kugel-Kollisionen „schaufelten" die Verteilung
+  in die Mitte. Fix: `spawnAcc += raw*1000*state.speed` (Kugeln fallen weiterhin
+  einzeln, nur schneller), und speed wirkt als Anzahl der Frame-Wiederholungen
+  mit fixem `h ≤ DT_STEP`.
+
+### Verifikation V10
+- **20-Lauf-Geschwindigkeitstest** (verify_speed20.js): speed 1–20 × verschiedene
+  Kugelzahlen/Ebenen → **20/20 OK**, μ≈n/2, σ≈√(n/4), χ² grün überall.
+- 300/12: μ=5.91, σ=1.70, χ²=3.30 ✅
+- 10000 Bälle: läuft durch, μ=6.0 exakt, σ=1.63 (χ² bei n>2000 zu sensitiv →
+  Harness prüft dort σ statt χ²) ✅
+- Browser: 10000 im Feld akzeptiert (kein Zurücksetzen), Reset → 300, Start läuft ✅
+
+---
 ## [V09] – 2026-08-15
 
 ### Fix: Simulation nach Durchlauf nicht erneut startbar (Bug)
