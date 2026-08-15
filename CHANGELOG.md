@@ -1,5 +1,35 @@
 # Changelog – Galton Board
 
+## [V09] – 2026-08-15
+
+### Fix: Simulation nach Durchlauf nicht erneut startbar (Bug)
+
+**User-Meldung:** Nach einem vollständigen Durchlauf lässt sich die Simulation über
+den Start-Button nicht erneut starten.
+
+**Ursache (Edge-Case):** Nach dem letzten gelandeten Ball setzt der frame()-Loop
+`running = false` und den Button auf „▶ Start" — aber `rafId` bleibt gesetzt (der
+rAF-Loop läuft weiter und registriert sich neu). Klickte der User auf Start,
+übersprang `start()` den rAF-Neustart (`rafId !== null`) und `frame()` traf sofort
+wieder auf die End-Bedingung (`dropped + balls.length < state.balls` ist falsch,
+weil `dropped` schon am Maximum ist) → `running` wurde sofort wieder false →
+Simulation startete nicht neu.
+
+**Fix:** `start()` erkennt den durchgelaufenen Zustand
+(`dropped >= state.balls && balls.length === 0`) und setzt vor dem Start die
+Zähler `dropped/spawnIdx/spawnAcc` sowie alle `bins` zurück, damit der laufende
+rAF-Loop neu spawnen kann. Parameter bleiben unangetastet. Zusätzlich werden
+Pause-Button-Zeilen aus dem bedingten Block herausgezogen (aktivieren bei jedem
+Start, nicht nur im if).
+
+### Verifikation V09
+- Statisch: Script-Balance ✅, node --check ✅, 33 IDs ✅
+- Physik 300/12: μ=5.91, σ=1.70, χ²=3.30 ✅ · 600/12: σ=1.66, χ²=12.24 ✅
+- Browser-E2E (echter rAF-Loop): Start → Lauf → Auto-Stop (Button „▶ Start",
+  Pause disabled) → Start-Klick → **zweiter Lauf startet** (Button „■ Stopp",
+  Pause aktiv) ✅
+
+---
 ## [V08] – 2026-08-15
 
 ### Änderungen: Vollwertige Simulationssteuerung
