@@ -1,5 +1,28 @@
 # Changelog – Galton Board
 
+## [V02] – 2026-08-15
+
+### Fixes (auf User-Feedback)
+
+- **Eingabefelder entsperrt**: Alle `min`/`max`-Attribute entfernt. Die Felder akzeptieren jetzt
+  jeden Wert; es gibt kein Zurückschreiben/zurückspringen mehr. Intern werden die Werte nur noch
+  für die Physik-Stabilität abgesichert (Fallbacks bei NaN, harte Grenzen im Code, ohne die
+  Eingabe anzufassen). Tooltip-Texte entsprechend angepasst („frei wählbar“ statt fester Ranges).
+- **Kugeln türmen sich jetzt in den Fächern** (Kern-Bug behoben):
+  - Render-Loop nutzte `r.x, r.y` (Fallposition am Boden) statt `r.restX, r.restY` (Fach-Stapelposition)
+    → alle Kugeln wurden am Boden übereinander statt in den Fächern gezeichnet.
+  - Brett-Höhe/Stapel-Reserve erhöht: `maxStack` von 18 % → 24 % der Kugeln + Sicherheitspuffer;
+    die oberste Kugel ragte sonst 1 px über den Rand (`restY = -1`).
+- **Rechner**: `clampInt`/`clamp` (entfernt) durch `finiteNum` ersetzt; Eingaben werden nicht mehr zurückgeschrieben.
+
+### Verifikation V02
+- Statisch: Script-Balance ✅, node --check ✅, 34 IDs ✅
+- Keine `min`/`max`-Attribute mehr (grep = 0) ✅
+- Physik (300 Kugeln, 12 Ebenen): μ=6.12 (Soll 6.0), σ=1.95 (Soll 1.73), χ²=8.69 ✅
+- Browser-E2E: Start → 300 Kugeln gesettled, 0 out-of-bounds, minY=106/maxY=678 bei H=693 ✅
+- Sichtbares Stacking: Fach 6 `ry 678→669→660` (übereinander getürmt) ✅
+
+---
 ## [V01] – 2026-08-15
 
 ### Erstversion (Feature-Komplett)
