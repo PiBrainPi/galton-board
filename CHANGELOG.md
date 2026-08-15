@@ -1,5 +1,27 @@
 # Changelog – Galton Board
 
+## [V04] – 2026-08-15
+
+### Fix: Animation zeigte nichts mehr (User-Bugmeldung)
+
+- **Ursache:** Beim V03-Umbau (Fächer-Stapel-Animation entfernen) wurde in `render()`
+  die Schleifenvariable `var i;` mit gelöscht. Die Danach folgende Zeile nutzte
+  `for (i = 0; ...)` – im strikten Modus wirft das bei jedem Frame einen
+  `ReferenceError: i is not defined` → der rAF-Loop starb sofort → keine Animation.
+- **Fix:** `var i;` in `render()` wiederhergestellt.
+- **Dauerhafte Absicherung:** Neuer Harness `tests/verify_fullrun.js`, der NEBEN der
+  Physik auch `render()`, `drawHistogram()` und `updateStats()` explizit ausführt.
+  Er reproduzierte den V03-Fehler exakt (`FEHLER in render: i is not defined`) und ist
+  für V04 grün. Solche „stille Freeze“-Fehler sah weder `node --check` noch der
+  reine Physik-Harness.
+
+### Verifikation V04
+- Statisch: Script-Balance ✅, node --check ✅, 34 IDs ✅
+- Volllauf-Harness (300 Kugeln, 12 Ebenen): alle Render-Funktionen OK, μ=6.12, σ=1.95, χ²=8.69 ✅
+- Browser-E2E: Start → Kugeln fallen sichtbar (52 aktiv nach 2 s, 60 FPS), nach 12 s
+  alle 300 gelandet, μ=6.01, σ=1.85, Histogramm-Kurve aktiv ✅
+
+---
 ## [V03] – 2026-08-15
 
 ### Änderung (auf User-Wunsch)
