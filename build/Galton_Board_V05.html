@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galton Board – Edle Simulation mit Physik, Theorie &amp; Rechner</title>
+<meta name="description" content="Galton Board / Galtonsches Brett: Physikalisch realistische Simulation mit edlem Holzrahmen, Live-Histogramm, Normalverteilungs-Overlay, interaktivem Wahrscheinlichkeitsrechner sowie ausführlicher Theorie, Historie und Anwendungen. 100 % offline, ohne externe Abhängigkeiten.">
+<style>
+:root{
+  --wood-deep:#1d0f04;
+  --wood-dark:#2a1709;
+  --wood:#3d2412;
+  --wood-mid:#57371c;
+  --wood-grain:#6b4523;
+  --gold:#d8b25c;
+  --gold-bright:#f2d68f;
+  --gold-dim:#a8823d;
+  --cream:#f3e7d1;
+  --cream-dim:#cfbe9e;
+  --text:#efe3c9;
+  --muted:#b39d7a;
+  --panel:rgba(26,15,6,.82);
+  --panel-line:rgba(216,178,92,.22);
+  --danger:#c96f4a;
+  --ok:#8fbc6a;
+  --radius:14px;
+  --font-head:Georgia,'Times New Roman',serif;
+  --font-body:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);
+  color:var(--text);
+  line-height:1.6;
+  background:
+    radial-gradient(1200px 500px at 50% -100px, rgba(216,178,92,.08), transparent 60%),
+    repeating-linear-gradient(93deg, rgba(0,0,0,.14) 0 2px, transparent 2px 5px),
+    linear-gradient(160deg, #0c0502 0%, #1a0d04 45%, #120801 100%);
+  min-height:100vh;
+  padding:22px 14px 60px;
+}
+.skip{position:absolute;left:-999px;top:0;background:var(--gold);color:#1a0d04;padding:8px 14px;border-radius:0 0 8px 0;z-index:99}
+.skip:focus{left:0}
+.wrap{max-width:1080px;margin:0 auto}
+/* ---------- Header ---------- */
+header.hero{text-align:center;padding:34px 16px 26px}
+header.hero .kicker{font-size:.78rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px}
+header.hero h1{
+  font-family:var(--font-head);
+  font-size:clamp(2rem,5vw,3.4rem);
+  font-weight:600;
+  letter-spacing:.06em;
+  color:var(--gold-bright);
+  text-shadow:0 2px 0 rgba(0,0,0,.55), 0 0 34px rgba(216,178,92,.18);
+  margin-bottom:8px;
+}
+header.hero .sub{color:var(--cream-dim);font-size:clamp(.88rem,1.6vw,1.02rem);max-width:720px;margin:0 auto}
+.chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.chip{font-size:.72rem;letter-spacing:.08em;color:var(--gold);border:1px solid var(--panel-line);background:rgba(216,178,92,.06);padding:4px 12px;border-radius:999px}
+.chip b{color:var(--gold-bright);font-weight:600}
+/* ---------- Cards ---------- */
+.card{
+  background:var(--panel);
+  border:1px solid var(--panel-line);
+  border-radius:var(--radius);
+  box-shadow:0 10px 34px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,235,190,.06);
+  margin:0 0 26px;
+  padding:20px clamp(14px,3vw,30px);
+  position:relative;
+  backdrop-filter:blur(2px);
+}
+.card h2{
+  font-family:var(--font-head);
+  font-size:clamp(1.15rem,2.4vw,1.5rem);
+  color:var(--gold-bright);
+  margin:0 0 4px;
+  letter-spacing:.02em;
+}
+.card h2 .no{
+  font-size:.72em;color:var(--gold-dim);margin-right:10px;letter-spacing:.18em;
+  font-variant-numeric:tabular-nums;
+}
+.card .lead{color:var(--muted);font-size:.92rem;margin-bottom:16px;max-width:820px}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--panel-line),transparent);margin:18px 0}
+/* ---------- Controls ---------- */
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:.74rem;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:5px}
+.field .hint{font-size:.68rem;color:var(--muted);min-height:1em}
+.input{
+  background:rgba(10,5,1,.7);
+  border:1px solid rgba(216,178,92,.3);
+  border-radius:9px;
+  color:var(--cream);
+  font-size:1rem;
+  padding:8px 10px;
+  width:100%;
+  font-variant-numeric:tabular-nums;
+  transition:border-color .15s, box-shadow .15s;
+}
+.input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(216,178,92,.18)}
+input[type=checkbox].input{width:auto;justify-self:start;accent-color:var(--gold);transform:scale(1.15);margin:6px 0}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{
+  font-family:var(--font-body);
+  border:1px solid var(--gold-dim);
+  border-radius:10px;
+  padding:11px 22px;
+  font-size:.95rem;
+  font-weight:600;
+  letter-spacing:.06em;
+  cursor:pointer;
+  color:#241506;
+  background:linear-gradient(180deg,var(--gold-bright),var(--gold) 55%,var(--gold-dim));
+  box-shadow:0 3px 0 rgba(0,0,0,.35), inset 0 1px 0 rgba(255,250,230,.75);
+  transition:transform .06s, filter .15s;
+}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.btn.secondary{background:linear-gradient(180deg,#6b5533,#4a3a1f);color:var(--cream);border-color:#7a6238}
+.btn.ghost{background:transparent;color:var(--gold);border-color:var(--panel-line)}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.4)}
+.btn b{font-size:1rem}
+/* ---------- Info tip ---------- */
+.info{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:15px;height:15px;border-radius:50%;
+  border:1px solid var(--gold-dim);color:var(--gold);
+  font-size:.62rem;font-weight:700;cursor:help;user-select:none;
+  background:rgba(216,178,92,.08);
+}
+.info:focus{outline:2px solid var(--gold);outline-offset:2px}
+#tip{
+  position:fixed;z-index:70;max-width:290px;
+  background:#100702;border:1px solid var(--gold-dim);
+  border-radius:10px;padding:10px 12px;font-size:.8rem;line-height:1.45;
+  color:var(--cream);box-shadow:0 8px 26px rgba(0,0,0,.6);
+  pointer-events:none;opacity:0;transition:opacity .12s;
+}
+#tip.on{opacity:1}
+#tip .t-title{display:block;color:var(--gold-bright);font-weight:700;margin-bottom:3px;letter-spacing:.04em}
+/* ---------- Board ---------- */
+.board-card{padding:16px clamp(10px,2.5vw,22px)}
+.boardFrame{
+  position:relative;border-radius:12px;overflow:hidden;
+  border:1px solid rgba(216,178,92,.35);
+  box-shadow:0 14px 44px rgba(0,0,0,.6), inset 0 0 0 6px #241206;
+}
+#board{display:block;width:100%;height:auto;background:#2a1709}
+.histWrap{margin-top:14px;display:grid;grid-template-columns:1fr;gap:10px}
+#hist{display:block;width:100%;height:auto;background:rgba(10,5,1,.55);border:1px solid var(--panel-line);border-radius:10px}
+.histLegend{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:.76rem;color:var(--muted)}
+.histLegend .sw{width:26px;height:4px;border-radius:2px;display:inline-block;vertical-align:middle}
+.stats{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));margin-top:14px}
+.stat{background:rgba(10,5,1,.5);border:1px solid var(--panel-line);border-radius:10px;padding:9px 12px;text-align:center}
+.stat .k{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dim)}
+.stat .v{font-size:1.15rem;font-weight:700;color:var(--gold-bright);font-variant-numeric:tabular-nums}
+.stat .d{font-size:.66rem;color:var(--muted)}
+/* ---------- Calc ---------- */
+.calc-out{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));margin-top:16px}
+.out{background:rgba(10,5,1,.55);border:1px solid var(--panel-line);border-radius:10px;padding:10px 12px}
+.out .k{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dim)}
+.out .v{font-size:1.12rem;font-weight:700;color:var(--gold-bright);font-variant-numeric:tabular-nums;word-break:break-word}
+table.pascal{width:100%;border-collapse:collapse;margin-top:10px;font-size:.82rem;font-variant-numeric:tabular-nums}
+table.pascal th,table.pascal td{border:1px solid rgba(216,178,92,.14);padding:4px 6px;text-align:right;color:var(--cream-dim)}
+table.pascal td.hl{background:rgba(216,178,92,.22);color:var(--gold-bright);font-weight:700}
+table.pascal th{background:rgba(216,178,92,.09);color:var(--gold);font-weight:600}
+/* ---------- Prose sections ---------- */
+.prose h3{font-family:var(--font-head);color:var(--gold);font-size:1.06rem;margin:22px 0 8px;letter-spacing:.02em}
+.prose h3 .step{display:inline-block;min-width:26px;margin-right:8px;color:var(--gold-bright)}
+.prose p{margin:0 0 12px;color:var(--text);font-size:.95rem}
+.prose ul,.prose ol{margin:0 0 14px 22px;color:var(--text);font-size:.93rem}
+.prose li{margin-bottom:6px}
+.prose b{color:var(--gold-bright);font-weight:600}
+.prose .note{
+  background:rgba(216,178,92,.07);border-left:3px solid var(--gold);
+  border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0;font-size:.9rem;color:var(--cream-dim);
+}
+.prose .warn{
+  background:rgba(201,111,74,.09);border-left:3px solid var(--danger);
+  border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0;font-size:.9rem;color:#eacab8;
+}
+.formula{
+  font-family:var(--font-head);font-size:1rem;color:var(--gold-bright);
+  background:rgba(10,5,1,.55);border:1px solid var(--panel-line);border-radius:10px;
+  padding:12px 16px;margin:10px 0;text-align:center;letter-spacing:.02em;
+}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.25;margin:0 2px;font-size:.92em}
+.frac>span{border-bottom:1px solid var(--gold-dim);padding:0 6px}
+.frac>span:last-child{border-bottom:none;padding-top:0}
+.var{font-style:italic}
+.cite{display:block;font-size:.78rem;color:var(--muted);margin:4px 0 0;line-height:1.5}
+.cite a{color:var(--gold)}
+.grid2{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.app{background:rgba(10,5,1,.45);border:1px solid var(--panel-line);border-radius:12px;padding:14px 16px}
+.app h4{color:var(--gold-bright);font-family:var(--font-head);font-size:.98rem;margin-bottom:6px}
+.app p{font-size:.88rem;color:var(--cream-dim);margin-bottom:8px}
+.app .key{display:block;font-size:.8rem;color:var(--gold);border-top:1px dashed var(--panel-line);padding-top:8px}
+footer{text-align:center;color:var(--muted);font-size:.76rem;padding:26px 0 8px;letter-spacing:.06em}
+footer b{color:var(--gold-dim);font-weight:600}
+details.acc{border:1px solid var(--panel-line);border-radius:10px;margin:8px 0;background:rgba(10,5,1,.35)}
+details.acc summary{cursor:pointer;padding:12px 14px;color:var(--gold);font-weight:600;font-size:.92rem;letter-spacing:.04em;list-style:none}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary::before{content:'▸ ';color:var(--gold-dim)}
+details.acc[open] summary::before{content:'▾ '}
+details.acc .body{padding:4px 16px 14px}
+@media (prefers-reduced-motion: reduce){
+  *{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kicker">Galtonsches Brett · Quincunx</div>
+  <h1>Galton Board</h1>
+  <p class="sub">Eine physikalisch realistische Simulation mit edlem Holzrahmen, goldenen Messingnägeln und live berechneter Glockenkurve &ndash; inklusive interaktivem Wahrscheinlichkeitsrechner und ausführlicher Theorie.</p>
+  <div class="chips">
+    <span class="chip"><b id="fps">--</b> FPS</span>
+    <span class="chip">100&thinsp;% Offline</span>
+    <span class="chip">0 externe Abhängigkeiten</span>
+    <span class="chip">Deterministische Substep-Physik</span>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ 01 STEUERUNG ============ -->
+<section class="card" aria-labelledby="h-steuerung">
+  <h2 id="h-steuerung"><span class="no">01</span>Steuerung &amp; Parameter</h2>
+  <p class="lead">Alle Parameter live anpassbar. <b>Kugelanzahl</b> und <b>Ebenen</b> sind als gängige Werte vorbelegt. Änderungen an Brett-Geometrie setzen die Simulation automatisch zurück.</p>
+  <div class="grid">
+    <div class="field">
+      <label for="balls">Kugelanzahl <span class="info" tabindex="0" role="button" aria-label="Information über Kugelanzahl" data-title="Kugelanzahl" data-tip="Wie viele Kugeln beim Start in das Brett fallen. Frei wählbar – gängig: 300. Mehr Kugeln → vollere Glockenkurve, mehr Rechenlast.">ⓘ</span></label>
+      <input class="input" id="balls" type="number"  step="1" value="300" inputmode="numeric">
+      <span class="hint">Default: 300</span>
+    </div>
+    <div class="field">
+      <label for="rows">Ebenen (Nagelreihen) <span class="info" tabindex="0" role="button" aria-label="Information über Ebenen" data-title="Ebenen" data-tip="Anzahl der Peg-Reihen = Anzahl Münzwürfe n der Binomialverteilung. Frei wählbar. Es entstehen rows+1 Fächer. Gängig: 12.">ⓘ</span></label>
+      <input class="input" id="rows" type="number"  step="1" value="12" inputmode="numeric">
+      <span class="hint">Default: 12 → 13 Fächer</span>
+    </div>
+    <div class="field">
+      <label for="ballR">Kugelgröße (px) <span class="info" tabindex="0" role="button" aria-label="Information über Kugelgröße" data-title="Kugelgröße" data-tip="Radius der Kugeln in Bildschirm-Pixeln. Frei wählbar (intern 1–10 px). Kleinere Kugeln fallen schneller und wirken filigraner; größere sind leichter zu beobachten.">ⓘ</span></label>
+      <input class="input" id="ballR" type="number"  step="0.5" value="4.5" inputmode="decimal">
+      <span class="hint">Default: 4.5</span>
+    </div>
+    <div class="field">
+      <label for="rest">Elastizität <span class="info" tabindex="0" role="button" aria-label="Information über Elastizität" data-title="Elastizität" data-tip="Restitutionskoeffizient der Kugel-Peg-Stöße. Frei wählbar: 0 = komplett unelastisch (klebt), 1 = perfekt elastisch, >1 = Energie-Gewinn. Realistisch: 0.55–0.75.">ⓘ</span></label>
+      <input class="input" id="rest" type="number"  step="0.01" value="0.62" inputmode="decimal">
+      <span class="hint">Default: 0.62</span>
+    </div>
+    <div class="field">
+      <label for="grav">Gravitation <span class="info" tabindex="0" role="button" aria-label="Information über Gravitation" data-title="Gravitation" data-tip="Skalierte Fallbeschleunigung, frei wählbar (Default 9.81). Nur die Optik der Fallgeschwindigkeit; die Verteilung ist davon unabhängig.">ⓘ</span></label>
+      <input class="input" id="grav" type="number"  step="0.1" value="9.81" inputmode="decimal">
+      <span class="hint">Default: 9.81 (skaliert)</span>
+    </div>
+    <div class="field">
+      <label for="speed">Sim. Geschwindigkeit <span class="info" tabindex="0" role="button" aria-label="Information über Simulationsgeschwindigkeit" data-title="Geschwindigkeit" data-tip="Zeit-Raffung, frei wählbar. Bei höherem Wert fallen alle Kugeln deutlich schneller, die Physik bleibt dank fixem Substep identisch (kein Tunnel-Artefakt).">ⓘ</span></label>
+      <input class="input" id="speed" type="number"  step="0.25" value="1" inputmode="decimal">
+      <span class="hint">Default: 1×</span>
+    </div>
+    <div class="field">
+      <label for="interval">Abwurf-Intervall (ms) <span class="info" tabindex="0" role="button" aria-label="Information über Abwurf-Intervall" data-title="Abwurf-Intervall" data-tip="Zeit zwischen den einzelnen Kugeln, frei wählbar (ms). Kürzeres Intervall = kräftigerer Schwall, längeres = ruhigeres, einzeln beobachtbares Fallen.">ⓘ</span></label>
+      <input class="input" id="interval" type="number"  step="1" value="38" inputmode="numeric">
+      <span class="hint">Default: 38 ms</span>
+    </div>
+    <div class="field">
+      <label for="seed">Seed <span class="info" tabindex="0" role="button" aria-label="Information über Seed" data-title="Seed" data-tip="Saat für die minimale, deterministische Abwurf-Ungenauigkeit, frei wählbar. Klassische Stochastik-Betrachtung: Die Verteilung selbst entsteht aus der physikalischen Chaotik der Stöße, nicht aus einem Zufallsgenerator.">ⓘ</span></label>
+      <input class="input" id="seed" type="number"  step="1" value="42" inputmode="numeric">
+      <span class="hint">Default: 42</span>
+    </div>
+    <div class="field">
+      <label for="sound">Kollisions-Sound <span class="info" tabindex="0" role="button" aria-label="Information über Sound" data-title="Kollisions-Sound" data-tip="Realistische Klacker-Geräusche bei Peg- und Wandstößen (WebAudio, komplett offline, ohne Samples). Deaktivierbar. Erster Start muss einmal geklickt/angetippt werden (Browser-Autoplay-Regel).">ⓘ</span></label>
+      <input class="input" id="sound" type="checkbox" checked>
+      <span class="hint">Default: an</span>
+    </div>
+  </div>
+  <div class="btns">
+    <button class="btn" id="btnStart" type="button"><b>▶</b> Start</button>
+    <button class="btn secondary" id="btnPause" type="button" disabled><b>⏸</b> Pause</button>
+    <button class="btn ghost" id="btnReset" type="button"><b>↺</b> Reset</button>
+  </div>
+  <p class="hint" style="margin-top:10px">Tipp: <b>Leertaste</b> pausiert/startet die Animation (außerhalb von Eingabefeldern).</p>
+</section>
+
+<!-- ============ 02 BOARD & HISTOGRAMM ============ -->
+<section class="card board-card" aria-labelledby="h-board">
+  <h2 id="h-board"><span class="no">02</span>Das Brett</h2>
+  <div class="boardFrame"><canvas id="board" aria-label="Galton-Board-Simulation"></canvas></div>
+  <div class="histWrap">
+    <canvas id="hist" aria-label="Live-Histogramm der Kugelverteilung"></canvas>
+    <div class="histLegend">
+      <span><span class="sw" style="background:linear-gradient(90deg,#8a6d1f,#f2d68f)"></span> Fächerhäufigkeit (live)</span>
+      <span><span class="sw" style="background:#e8c37a;opacity:.8"></span> Normalverteilung (aus den Daten)</span>
+      <span id="histNote">Noch keine Kugeln abgeworfen.</span>
+    </div>
+  </div>
+  <div class="stats" id="stats">
+    <div class="stat"><div class="k">Kugeln gesamt</div><div class="v" id="stTotal">0</div><div class="d" id="stTotalD">von 300</div></div>
+    <div class="stat"><div class="k">Mittelwert x̄</div><div class="v" id="stMean">—</div><div class="d">theoretisch μ = 6.0</div></div>
+    <div class="stat"><div class="k">Std.-Abw. σ</div><div class="v" id="stSigma">—</div><div class="d">theoretisch σ = 1.73</div></div>
+    <div class="stat"><div class="k">Modus (Häufigstes Fach)</div><div class="v" id="stMode">—</div><div class="d">—</div></div>
+  </div>
+</section>
+
+<!-- ============ 03 RECHNER ============ -->
+<section class="card" aria-labelledby="h-calc">
+  <h2 id="h-calc"><span class="no">03</span>Wahrscheinlichkeits-Rechner (berechnet in Echtzeit)</h2>
+  <p class="lead">Gib Parameter der Binomialverteilung ein &ndash; alle Ergebnisse erscheinen sofort beim Tippen. Die theoretischen Werte entsprechen exakt dem, was dein Galton-Board näherungsweise erzeugt.</p>
+  <div class="grid">
+    <div class="field">
+      <label for="calcN">n (Münzwürfe / Ebenen) <span class="info" tabindex="0" role="button" aria-label="Information über n" data-title="n – Anzahl Versuche" data-tip="Zahl der Bernoulli-Experimente (Peg-Ebenen). Beim Galton Board entspricht n der Anzahl der Nagelreihen, die eine Kugel passiert. Frei wählbar.">ⓘ</span></label>
+      <input class="input" id="calcN" type="number"  step="1" value="12" inputmode="numeric">
+    </div>
+    <div class="field">
+      <label for="calcP">p (Wahrscheinlichkeit) <span class="info" tabindex="0" role="button" aria-label="Information über p" data-title="p – Erfolgswahrscheinlichkeit" data-tip="Wahrscheinlichkeit für &quot;rechts&quot; an einem einzelnen Nagel. Frei wählbar 0–1. Beim symmetrischen Brett gilt p = 0.5; ein schräges Brett verschiebt die Kurve.">ⓘ</span></label>
+      <input class="input" id="calcP" type="number"  step="0.01" value="0.5" inputmode="decimal">
+    </div>
+    <div class="field">
+      <label for="calcK">k (Trefferzahl / Fach) <span class="info" tabindex="0" role="button" aria-label="Information über k" data-title="k – Treffer" data-tip="Anzahl der &quot;Rechts&quot;-Entscheidungen = Fach-Nummer. Frei wählbar (intern auf 0…n begrenzt).">ⓘ</span></label>
+      <input class="input" id="calcK" type="number"  step="1" value="6" inputmode="numeric">
+    </div>
+  </div>
+  <div class="calc-out">
+    <div class="out"><div class="k">C(n, k) Binomialkoeffizient</div><div class="v" id="oComb">—</div></div>
+    <div class="out"><div class="k">P(X = k) exakt</div><div class="v" id="oExact">—</div></div>
+    <div class="out"><div class="k">P(X ≤ k) kumulativ</div><div class="v" id="oCum">—</div></div>
+    <div class="out"><div class="k">Erwartungswert μ = n·p</div><div class="v" id="oMean">—</div></div>
+    <div class="out"><div class="k">Varianz σ² = n·p·(1−p)</div><div class="v" id="oVar">—</div></div>
+    <div class="out"><div class="k">Std.-Abw. σ</div><div class="v" id="oSigma">—</div></div>
+    <div class="out"><div class="k">z-Score ((k − μ)/σ)</div><div class="v" id="oZ">—</div></div>
+    <div class="out"><div class="k">Normalnäherung φ(z)</div><div class="v" id="oPhi">—</div></div>
+  </div>
+  <div class="divider"></div>
+  <h3 style="font-family:var(--font-head);color:var(--gold);font-size:.98rem;margin-bottom:6px">Pascal&rsquo;sches Dreieck (n = 0 … min(n, 14))</h3>
+  <p class="hint" style="font-size:.72rem;color:var(--muted);margin-bottom:8px">Die Kugelanzahl pro Fach entspricht (skaliert) den Zahlen dieser Zeile. Markierte Zelle = C(n, k) deiner Rechner-Eingabe.</p>
+  <div style="overflow-x:auto"><table class="pascal" id="pascTable" aria-label="Pascal'sches Dreieck"></table></div>
+</section>
+
+<!-- ============ 04 THEORIE ============ -->
+<section class="card" aria-labelledby="h-theory">
+  <h2 id="h-theory"><span class="no">04</span>Die Mathematik hinter dem Galton Board</h2>
+  <p class="lead">Warum entsteht aus einem Brett mit Nägeln eine Glockenkurve? Die Antwort führt Schritt für Schritt von einem simplen Münzwurf bis zum Zentralen Grenzwertsatz.</p>
+  <div class="prose">
+
+    <h3><span class="step">04.1</span>Das Bernoulli-Experiment</h3>
+    <p>Jeder einzelne Nagel im Galton Board ist ein <b>Zufallsexperiment mit zwei Ausgängen</b>: Trifft die Kugel einen Nagel, weicht sie entweder nach <b>links</b> oder nach <b>rechts</b> ab. Bei einem perfekt symmetrischen Brett sind beide Möglichkeiten gleich wahrscheinlich. Solche Experimente heißen nach Jakob Bernoulli <b>Bernoulli-Experimente</b>; die klassische Notation ist</p>
+    <div class="formula">P(„rechts&ldquo;) = p&nbsp;&nbsp;und&nbsp;&nbsp;P(„links&ldquo;) = 1 − p&nbsp;&nbsp;mit&nbsp;&nbsp;p = 0.5</div>
+    <p>Die Kugel durchläuft genau <var>n</var> solcher Entscheidungen &ndash; eine pro Nagelreihe. Ihre Position im Fach <var>k</var> entspricht daher der Anzahl der Rechts-Abweichungen unter <var>n</var> unabhängigen Versuchen.</p>
+
+    <h3><span class="step">04.2</span>Die Binomialverteilung</h3>
+    <p>Die Zufallsvariable X = „Anzahl der Rechts-Abweichungen&ldquo; ist <b>binomialverteilt</b>: X ~ B(n, p). Die Wahrscheinlichkeit, genau <var>k</var>-mal rechts abzuweichen, ist</p>
+    <div class="formula">
+      P(X = k) = <span class="frac"><span>n</span><span>k</span></span> · p<sup>k</sup> · (1 − p)<sup>n−k</sup>
+    </div>
+    <p>Jeder einzelne Pfad durch das Brett hat die Wahrscheinlichkeit p<sup>k</sup>(1−p)<sup>n−k</sup> &ndash; identisch für alle Pfade mit gleicher Rechts-Anzahl. Der <b>Binomialkoeffizient</b> C(n, k) zählt, wie viele verschiedene Pfade in dasselbe Fach führen. Mit p = 0.5 vereinfacht sich die Formel zu</p>
+    <div class="formula">
+      P(X = k) = <span class="frac"><span>n</span><span>k</span></span> · <span class="frac"><span>1</span><span>2<sup>n</sup></span></span>
+    </div>
+    <p class="note"><b>Kernaussage:</b> Das Galton Board ist ein <b>Analogrechner für Binomialkoeffizienten</b> &ndash; die Höhe des Kugelstapels im Fach <var>k</var> ist proportional zu C(n, k).</p>
+
+    <h3><span class="step">04.3</span>Das Pascal&rsquo;sche Dreieck</h3>
+    <p>Die Binomialkoeffizienten lassen sich mit der Rekursion C(n, k) = C(n−1, k−1) + C(n−1, k) zeilenweise aufbauen &ndash; genau das tut das <b>Pascal&rsquo;sche Dreieck</b>. Liest man eine Zeile des Dreiecks als Fachhöhen, hat man exakt das Ergebnis eines idealen Galton Boards vor Augen:</p>
+    <div class="formula">1&nbsp;&nbsp;6&nbsp;&nbsp;15&nbsp;&nbsp;20&nbsp;&nbsp;15&nbsp;&nbsp;6&nbsp;&nbsp;1&nbsp;&nbsp;<span style="color:var(--cream-dim)">← Zeile n = 6, Summe 2<sup>6</sup> = 64</span></div>
+    <p>Die Summe jeder Zeile beträgt 2<sup>n</sup> &ndash; die Gesamtzahl aller möglichen Pfade. Wichtig für das Brett: Die Koeffizienten sind symmetrisch (C(n, k) = C(n, n−k)); deshalb ist die Verteilung perfekt symmetrisch um die Mitte.</p>
+
+    <h3><span class="step">04.4</span>Vom Binomial zur Normalverteilung (De Moivre &amp; Laplace)</h3>
+    <p>Abraham de Moivre zeigte 1733, dass die Binomialverteilung für wachsendes <var>n</var> gegen die <b>Glockenkurve</b> strebt; Pierre-Simon Laplace verallgemeinerte das 1812 zum <b>De-Moivre-Laplace-Theorem</b> &ndash; dem ersten Spezialfall des Zentralen Grenzwertsatzes:</p>
+    <div class="formula">
+      <span class="frac"><span>n</span><span>k</span></span> p<sup>k</sup>(1−p)<sup>n−k</sup> ≈ <span class="frac"><span>1</span><span>σ√(2π)</span></span> · exp(−<span class="frac"><span>(k − μ)<sup>2</sup></span><span>2σ<sup>2</sup></span></span>)
+    </div>
+    <p>mit Mittelwert μ = n·p und Standardabweichung σ = √(n·p·(1−p)). Schon bei <var>n</var> = 12 Pegreihen ist die Annäherung für die Praxis ausgezeichnet &ndash; erkennbar am roten Kurven-Overlay über dem Histogramm.</p>
+
+    <h3><span class="step">04.5</span>Zentraler Grenzwertsatz &amp; der „analoge Computer&ldquo;</h3>
+    <p>Der <b>Zentrale Grenzwertsatz</b> (CLT) besagt: Die Summe vieler unabhängiger, gleichverteilter Zufallseffekte ist annähernd normalverteilt &ndash; unabhängig von der Form der Einzeleffekte. Die Weglänge einer Kugel ist die Summe von <var>n</var> Einzelentscheidungen (±1 je Abweichung), also gilt der CLT direkt. Das Brett macht diese Mathematik <b>physikalisch sichtbar</b>, ohne dass ein Computer rechnet. Wichtig ist die ehrliche Einschränkung: Reale Bretter sind nie perfekt symmetrisch (jeder Nagel hat ein kleines, individuelles p ≠ 0.5), und die Kugeln stoßen sich gegenseitig &ndash; deshalb bleiben Messung und Theorie näherungsweise, aber nicht exakt gleich.</p>
+
+  </div>
+</section>
+
+<!-- ============ 05 HISTORIE ============ -->
+<section class="card" aria-labelledby="h-history">
+  <h2 id="h-history"><span class="no">05</span>Historie: Francis Galton und das Quincunx</h2>
+  <p class="lead">Das Galton Board ist eines der ältesten statistischen Demonstrationsgeräte der Welt &ndash; und seine Entstehungsgeschichte ist faszinierend und kritisch zu betrachten zugleich.</p>
+  <div class="prose">
+
+    <h3><span class="step">05.1</span>Francis Galton (1822–1911)</h3>
+    <p>Francis Galton, ein englischer Universalgelehrter und Cousin Charles Darwins, gilt als einer der Begründer der modernen Statistik. Er prägte fundamentale Konzepte, die bis heute in jeder Statistik-Vorlesung auftauchen: die <b>Korrelation</b>, die <b>Regressionsanalyse</b>, den Begriff <b>„Natur gegen Umwelt&ldquo;</b> (nature vs. nurture) und systematische Methoden zur Messung menschlicher Merkmale. Seine Datenarbeit (z. B. zu Erbsengrößen, Fingerabdrücken und Körpergrößen von Eltern und Kindern) legte Grundsteine der Biometrie.</p>
+
+    <h3><span class="step">05.2</span>Das Quincunx – die Geburt des Bretts</h3>
+    <p>Um 1873 führte Galton in Vorlesungen ein Gerät vor, das er <b>Quincunx</b> nannte &ndash; benannt nach dem lateinischen Wort für die Fünfer-Anordnung auf einem Würfel (quincunx = fünf), da die Nagel-Anordnung an die 5-Punkte-Fläche eines Spielwürfels erinnert. In seinem Buch <i>Natural Inheritance</i> (1889) beschrieb er das Gerät ausführlich. Sein Ziel war es, anschaulich zu zeigen, wie aus vielen kleinen, unabhängigen Einflüssen eine glockenförmige Verteilung, das <b>„Gesetz der Fehler&ldquo;</b> (law of error, heute Normalverteilung), entsteht &ndash; und wie dieses Gesetz seine berühmte Beobachtung der <b>Regression zur Mitte</b> (regression to mediocrity) erklärt.</p>
+
+    <h3><span class="step">05.3</span>Die Verbreitung</h3>
+    <ul>
+      <li>Ende des 19. Jahrhunderts wurde das Quincunx zum Standard-Demonstrationsgerät in der Statistik-Lehre (u. a. durch Karl Pearson, der Galtons Statistiken mathematisch formalisierte).</li>
+      <li>Im englischen Sprachraum heißt das Gerät bis heute <b>Galton Board</b> oder <b>Bean Machine</b> („Bohnen-Maschine&ldquo;), weil früher Bohnen statt Kugeln verwendet wurden.</li>
+      <li>Moderne Lehrmittel nutzen das Prinzip weiter: als diskretes Galton Board in Statistik-Apps, aber auch als physikalisches Exponat in Science-Centern weltweit.</li>
+    </ul>
+
+    <div class="warn">
+      <b>Kritische Einordnung &ndash; zwingend notwendig:</b> Galton war ein überzeugter Verfechter der <b>Eugenik</b>, also der Idee, die menschliche Fortpflanzung zu „verbessern&ldquo;, und beeinflusste damit Ideologien, die im 20. Jahrhundert zu Zwangssterilisierungen und Verbrechen führten. Seine statistischen Werkzeuge sind wissenschaftliche Errungenschaften &ndash; seine sozialen Forderungen sind es nicht und werden von der modernen Wissenschaft und Gesellschaft klar abgelehnt. Das Galton Board selbst ist ein neutrales Lehrmittel: Es zeigt Mathematik, keine Werturteile. Diese Trennung von wissenschaftlichem Werk und persönlicher Ideologie des Erfinders ist für eine ehrliche Betrachtung unerlässlich.
+    </div>
+
+    <p class="cite">Quellen: Galton, F. (1889) <i>Natural Inheritance</i>; Stigler, S. M. (1986) <i>The History of Statistics</i>, Harvard Univ. Press; Freedman, Pisani, Purves (2007) <i>Statistics</i>, 4. Aufl.; Gould, S. J. (1981) <i>The Mismeasure of Man</i> (kritische Aufarbeitung). Zugegriffen August 2026.</p>
+
+  </div>
+</section>
+
+<!-- ============ 06 ANWENDUNGEN ============ -->
+<section class="card" aria-labelledby="h-apps">
+  <h2 id="h-apps"><span class="no">06</span>Anwendungsfelder in der Realität</h2>
+  <p class="lead">Das Galton-Prinzip &ndash; viele kleine unabhängige Effekte ergeben eine Glockenkurve &ndash; steckt in überraschend vielen Disziplinen. Hier die wichtigsten &ndash; ehrlich bewertet, inklusive der Grenzen.</p>
+  <div class="grid2">
+
+    <article class="app">
+      <h4>🏭 Qualitätsmanagement &amp; Six Sigma</h4>
+      <p>Jede Fertigungslinie unterliegt zufälligen Schwankungen (Material, Maschine, Mensch). Shewhart-Regelkarten (1924) und die Six-Sigma-Methodik nutzen die Glockenkurve, um zwischen „normaler&ldquo; Streuung und echten Störungen zu unterscheiden. Die Prozessfähigkeit Cpk vergleicht die Lage der Kurve mit den Toleranzgrenzen.</p>
+      <span class="key">Kernerkenntnis: Variation ist inhärent &ndash; Statistik trennt Zufall von Systemfehler.</span>
+    </article>
+
+    <article class="app">
+      <h4>📈 Finanzmärkte: Random Walk &amp; Optionen</h4>
+      <p>Louis Bachelier beschrieb 1900 in <i>Théorie de la spéculation</i> Kurse als Summe vieler kleiner Schritte &ndash; das mathematische Galton Board der Finanzwelt. Darauf beruhen die Brownsche-Bewegungs-Modelle und die Black-Scholes-Formel (1973).</p>
+      <span class="key">Kernerkenntnis: Kursbewegungen ähneln einer Glockenkurve &ndash; aber reale Märkte haben „dicke Ränder&rdquo; (Fat Tails) und Phasen gebündelter Volatilität. Modelle sind Näherungen, keine Wahrheiten.</span>
+    </article>
+
+    <article class="app">
+      <h4>⚛️ Physik: Diffusion &amp; Brownsche Bewegung</h4>
+      <p>Die Brownsche Bewegung (Einstein 1905, experimentell bestätigt durch Perrin 1909) ist die Summe vieler winziger Stöße von Molekülen auf ein Staubkorn &ndash; physisch gesehen dasselbe wie eine Kugel, die durch tausende Nagelreihen fällt. Die Maxwell-Boltzmann-Verteilung der Teilchengeschwindigkeiten ist ebenfalls eine Glockenkurve.</p>
+      <span class="key">Kernerkenntnis: Die Normalverteilung ist die universelle Statistik des Zufalls in der Natur.</span>
+    </article>
+
+    <article class="app">
+      <h4>🧬 Genetik &amp; Biologie</h4>
+      <p>Quantitative Merkmale wie Körpergröße entstehen aus der Summe vieler Gene plus Umwelteinflüssen &ndash; klassisch normalverteilt. Galtons ursprüngliche Motivation war genau diese Vererbungsfrage: Er beobachtete die „Regression zur Mitte&ldquo;, das Rückgleiten extremer Eltern-Werte zur Populationsmitte.</p>
+      <span class="key">Kernerkenntnis: Viele kleine, additive Effekte &rarr; Glockenkurve, selbst wenn jeder Einzeleffekt diskret ist.</span>
+    </article>
+
+    <article class="app">
+      <h4>🧑‍🤝‍🧑 Sozial- &amp; Medizinwissenschaften</h4>
+      <p>Messfehler in Umfragen und Diagnostik lassen sich als Summe vieler kleiner Fehlerquellen modellieren. Das Konfidenzintervall des Stichprobenmittelwerts folgt direkt aus dem CLT &ndash; das Galton Board ist die beste intuitive Erklärung dafür, warum ein Mittelwert über 30 Beobachtungen „normal&ldquo; verteilt ist.</p>
+      <span class="key">Kernerkenntnis: Einkommen, Vermögen und Fähigkeiten sind NICHT normalverteilt (lognormal, Pareto) &ndash; den CLT nur anwenden, wo er fachlich begründet ist.</span>
+    </article>
+
+    <article class="app">
+      <h4>🤖 Informatik &amp; KI: Bagging &amp; Random Forests</h4>
+      <p>Random Forests (Breiman 2001) trainieren hunderte „schwache&ldquo; Entscheidungsbäume auf zufälligen Stichproben und lassen sie abstimmen. Die Varianz-Reduktion durch Mitteln vieler Einzelmodelle ist statistisch exakt das Galton-Prinzip: Das kollektive Ergebnis ist stabiler als jedes einzelne.</p>
+      <span class="key">Kernerkenntnis: Mehr unabhängige Beobachter &rarr; glockenförmig schmaleres, verlässlicheres Ergebnis.</span>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============ 07 DOKUMENTATION & QUELLEN ============ -->
+<section class="card" aria-labelledby="h-doc">
+  <h2 id="h-doc"><span class="no">07</span>Technische Dokumentation &amp; Ressourcen</h2>
+  <details class="acc" open>
+    <summary>Physik-Engine: Wie „real&ldquo; ist die Simulation?</summary>
+    <div class="body prose">
+      <ul>
+        <li><b>Fixer Timestep:</b> Die Welt wird mit 120 Hz in Sub-Schritten berechnet, unabhängig von der Bildrate. Das verhindert „Tunneln&ldquo; durch Nägel auch bei 3×-Geschwindigkeit.</li>
+        <li><b>Teilelastische Stöße:</b> Restitution (Default 0.62) bestimmt den Energieverlust an Pegs; Wände (0.58), Kugel-Kugel-Stöße (0.45) und tangentiale Reibung (0.985-Faktor) sind getrennt parametrisiert.</li>
+        <li><b>Gravitation &amp; Widerstand:</b> Skalierte Fallbeschleunigung und leichter Luftwiderstand formen realistische Trajektorien.</li>
+        <li><b>Kein Zufallsgenerator in der Kollision:</b> Die Verteilung entsteht deterministisch aus der chaotischen Empfindlichkeit der Stöße. Das entspricht der realen Physik und ist zugleich reproduzierbar (Seed steuert nur die minimale Abwurf-Ungenauigkeit).</li>
+        <li><b>Kugel-Rotation:</b> Rollende Kugeln rotieren sichtbar – ein Detail, das die Optik deutlich belebt.</li>
+        <li><b>Leistung:</b> Räumliche Bucket-Kollision (nur benachbarte Nagelreihen &amp; Kugel-Buckets) hält 300 Kugeln bei 120 Hz flüssig, auch auf dem Raspberry Pi.</li>
+      </ul>
+    </div>
+  </details>
+  <details class="acc">
+    <summary>Formeln auf einen Blick</summary>
+    <div class="body prose">
+      <div class="formula">μ = n·p &nbsp;·&nbsp; σ = √(n·p·(1−p)) &nbsp;·&nbsp; φ(z) = <span class="frac"><span>1</span><span>√(2π)</span></span>·e<sup>−z²/2</sup> &nbsp;·&nbsp; z = <span class="frac"><span>k − μ</span><span>σ</span></span></div>
+    </div>
+  </details>
+  <details class="acc">
+    <summary>Weiterführende Ressourcen</summary>
+    <div class="body prose">
+      <ul>
+        <li>Wikipedia: <i>Galton board</i> / <i>Bean machine</i> – en.wikipedia.org/wiki/Galton_board</li>
+        <li>Wikipedia: <i>Francis Galton</i> – en.wikipedia.org/wiki/Francis_Galton</li>
+        <li>Britannica: <i>Sir Francis Galton</i> – britannica.com/biography/Francis-Galton</li>
+        <li>Stigler, S. M. (1986): <i>The History of Statistics: The Measurement of Uncertainty before 1900</i>, Harvard University Press.</li>
+        <li>Freedman, D., Pisani, R., Purves, R. (2007): <i>Statistics</i>, 4. Aufl., W. W. Norton.</li>
+      </ul>
+      <p class="cite">Alle Quellen zugegriffen im August 2026. Die Links sind reine Verweise; die Datei selbst arbeitet vollständig offline.</p>
+    </div>
+  </details>
+</section>
+
+</main>
+
+<footer>
+  <b>Galton Board V01</b> · Edle Simulation mit deterministischer Substep-Physik · erstellt mit Hermes Agent (Nous Research) · Projektordner: <code>~/Projects/Galton Board/</code>
+</footer>
+
+</div>
+<div id="tip" role="tooltip" aria-hidden="true"></div>
+
+<script id="app">
+(function () {
+  'use strict';
+
+  /* ============================================================
+     GALTON BOARD – deterministische Substep-Physik + edle Optik
+     ============================================================ */
+
+  // ---------- DOM ----------
+  var $ = function (id) { return document.getElementById(id); };
+  var el = {
+    board: $('board'), hist: $('hist'),
+    balls: $('balls'), rows: $('rows'), ballR: $('ballR'), rest: $('rest'),
+    grav: $('grav'), speed: $('speed'), interval: $('interval'), seed: $('seed'), sound: $('sound'),
+    btnStart: $('btnStart'), btnPause: $('btnPause'), btnReset: $('btnReset'),
+    stats: {
+      total: $('stTotal'), totalD: $('stTotalD'), mean: $('stMean'), sigma: $('stSigma'),
+      mode: $('stMode'), modeD: $('stMode').nextElementSibling
+    },
+    fps: $('fps'), histNote: $('histNote')
+  };
+  var tipEl = $('tip');
+
+  // ---------- Konstanten ----------
+  var PAD_L = 44, PAD_R = 44, PAD_T = 74;      // Innenabstand Brett
+  var WALL_INSET = 18;                          // Wände relativ zum Innenrand
+  var G_REF = 9.81, G_SCALE = 100;              // 9.81 -> 981 px/s²
+  var AIR_DRAG = 0.55;                          // Luftwiderstand pro Sekunde
+  var REST_WALL = 0.58, REST_BALL = 0.45, TANG_DAMP = 0.985;
+  var DT_STEP = 1 / 120;                        // fixer Physik-Timestep
+  var MAX_SUBSTEPS = 10;
+
+  // ---------- Zustand ----------
+  var state = { balls: 300, rows: 12, ballR: 4.5, rest: 0.62, grav: 9.81, speed: 1, interval: 38, seed: 42, sound: true };
+  var running = false, paused = false, rafId = null, lastTs = 0;
+  var spawnAcc = 0, dropped = 0, spawnIdx = 0;
+  var fpsAcc = 0, fpsFrames = 0, fpsLast = 0, lastStatsUpdate = 0;
+
+  // Physik-Welt
+  var W = 0, H = 0, dpr = 1;
+  var GX = 0, GXHALF = 0, CX = 0, RY = 0, binY = 0, floorY = 0;
+  var pegs = [];          // {x, y, r}
+  var pegGrid = [];       // je Reihe ein Array
+  var bins = [];          // Zähler je Fach
+  var binCenters = [];
+  var balls = [];         // aktive Kugeln
+  var restList = [];      // ruhende Kugeln {x, y, bin}
+  var buckets = new Map();// räumliche Kollisions-Buckets (Kugel-Kugel)
+
+  var bg = null;          // vorgerenderte Holz-/Peg-Ebene (offscreen)
+  var ballSprite = null;  // vorgerendertes Kugel-Sprite je Größe
+  var rng = mulberry32(42);
+
+  // ---------- Audio ----------
+  var actx = null, master = null, lastTick = 0;
+  function ensureAudio() {
+    try {
+      if (!actx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return;
+        actx = new AC();
+        master = actx.createGain();
+        master.gain.value = 0.45;
+        master.connect(actx.destination);
+      }
+      if (actx.state === 'suspended') actx.resume();
+    } catch (e) { /* Audio bleibt stumm */ }
+  }
+  function tickSound(vol, freq) {
+    if (!state.sound || !actx || !master) return;
+    var now = performance.now();
+    if (now - lastTick < 20) return;           // Klick-Rate begrenzen
+    lastTick = now;
+    var t = actx.currentTime;
+    var o = actx.createOscillator(), g = actx.createGain();
+    o.type = 'sine';
+    o.frequency.value = freq + (rng() - 0.5) * 140;
+    g.gain.setValueAtTime(Math.min(0.5, Math.max(0.02, vol)), t);
+    g.gain.exponentialRampToValueAtTime(0.0008, t + 0.08);
+    o.connect(g); g.connect(master);
+    o.start(t); o.stop(t + 0.09);
+  }
+
+  // ---------- Tooltips ----------
+  function initTips() {
+    var items = document.querySelectorAll('.info');
+    items.forEach(function (it) {
+      function show() {
+        tipEl.innerHTML = '<span class="t-title">' + it.dataset.title + '</span>' + it.dataset.tip;
+        tipEl.classList.add('on');
+        var r = it.getBoundingClientRect();
+        var tw = tipEl.offsetWidth, th = tipEl.offsetHeight;
+        var x = Math.min(Math.max(8, r.left + r.width / 2 - tw / 2), window.innerWidth - tw - 8);
+        var y = r.bottom + 8;
+        if (y + th > window.innerHeight - 8) y = r.top - th - 8;
+        tipEl.style.left = x + 'px'; tipEl.style.top = y + 'px';
+      }
+      function hide() { tipEl.classList.remove('on'); }
+      it.addEventListener('mouseenter', show);
+      it.addEventListener('mouseleave', hide);
+      it.addEventListener('focus', show);
+      it.addEventListener('blur', hide);
+      it.addEventListener('click', function (e) { e.stopPropagation(); show(); });
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest || !e.target.closest('.info')) hide();
+    });
+  }
+
+  // ---------- PRNG (nur für minimale Abwurf-Jitter) ----------
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+
+  // ---------- Parameter lesen & validieren ----------
+  function readParams() {
+    // Freie Eingabe: KEINE Grenzen-Sperre, KEIN Zurückschreiben der Feldwerte.
+    // Nur intern sichere Fallbacks/Werte für die Physik (Stabilitätsschutz):
+    state.balls = finiteNum(el.balls.value, 300, 1, 5000);
+    state.rows = finiteNum(el.rows.value, 12, 1, 60);
+    state.ballR = finiteNum(el.ballR.value, 4.5, 0.5, 14);
+    state.rest = finiteNum(el.rest.value, 0.62, -1, 2);
+    state.grav = finiteNum(el.grav.value, 9.81, 0.1, 100);
+    state.speed = finiteNum(el.speed.value, 1, 0.05, 20);
+    state.interval = finiteNum(el.interval.value, 38, 0.1, 5000);
+    state.seed = parseInt(el.seed.value, 10);
+    if (isNaN(state.seed)) state.seed = 42;
+    state.sound = el.sound.checked;
+    rng = mulberry32(state.seed);
+  }
+  // "finite numerisch mit Fallback & harten internen Grenzen" – schützt nur die
+  // Physik vor Unsinn (NaN, negativ), ohne die Benutzereingabe anzufassen.
+  function finiteNum(v, d, lo, hi) {
+    var x = parseFloat(v);
+    if (isNaN(x)) return d;
+    return Math.min(hi, Math.max(lo, x));
+  }
+
+  // ---------- Brett-Geometrie ----------
+  function pegR() {
+    // Peg-Radius: edle, kräftige Messingnägel, fast so groß wie die Kugel.
+    return Math.max(1.5, state.ballR * 0.85);
+  }
+  function buildGeom() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var n = state.rows;
+    // Peg-Abstand so gewählt, dass eine fallende Kugel IMMER den versetzten
+    // Peg der nächsten Reihe treffen kann, aber mit genug Lücke, um zentral
+    // (ohne seitlichen Impuls) aufzutreffen – das macht die binomiale 50/50-Form.
+    GX = Math.round(Math.min(56, Math.max(16, 4.6 * (state.ballR + pegR()))));
+    RY = GX * 0.75;
+    // Zentrum: Brettmitte; die äußersten Pegs liegen symmetrisch darum.
+    var centerX = PAD_L + n * GX / 2;
+    GXHALF = GX / 2;
+    W = Math.round(n * GX + PAD_L + PAD_R);
+    binY = PAD_T + n * RY;
+    floorY = binY + RY * 0.55;
+    // Brett-Höhe: endet direkt unter der letzten Nagelreihe (V03 – kein
+    // Stapelplatz mehr; die Kugeln verschwinden nach der letzten Ebene).
+    H = Math.round(floorY + 22);
+    CX = centerX;
+  }
+  function buildPegs() {
+    pegs = []; pegGrid = [];
+    var n = state.rows, r, c, pr = pegR();
+    var lastParity = ((n - 1) % 2);
+    for (r = 0; r < n; r++) {
+      var isLastParity = (r % 2 === lastParity);
+      var np = isLastParity ? n : n + 1;      // 12/13 Pegs abwechselnd, letzte Reihe = n
+      var x0 = CX - (np - 1) * GX / 2;        // symmetrisch um die Brettmitte
+      var row = [];
+      for (c = 0; c < np; c++) {
+        var p = { x: x0 + c * GX, y: PAD_T + r * RY, r: pr };
+        row.push(p); pegs.push(p);
+      }
+      pegGrid.push(row);
+    }
+    // Fächer: n+1 Lücken unter der letzten Reihe (die n Pegs hat)
+    bins = new Array(n + 1).fill(0);
+    binCenters = [];
+    for (c = 0; c <= n; c++) {
+      binCenters.push(CX + (c - n / 2) * GX);
+    }
+  }
+
+  // ---------- Offscreen: Holz + Fassung + Nägel ----------
+  function buildBackground() {
+    bg = document.createElement('canvas');
+    bg.width = Math.round(W * dpr); bg.height = Math.round(H * dpr);
+    var g = bg.getContext('2d');
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // Holz-Grund
+    var wood = g.createLinearGradient(0, 0, 0, H);
+    wood.addColorStop(0, '#5a3a1e');
+    wood.addColorStop(0.35, '#4a2c14');
+    wood.addColorStop(1, '#2a1709');
+    g.fillStyle = wood;
+    g.fillRect(0, 0, W, H);
+    // Maserung (prozedural)
+    g.globalAlpha = 0.16;
+    for (var i = 0; i < 42; i++) {
+      var y0 = (i / 42) * H + (i % 5) * 4;
+      g.strokeStyle = i % 2 ? '#241206' : '#7a5330';
+      g.lineWidth = 0.6 + (i % 3) * 0.35;
+      g.beginPath();
+      for (var x = -10; x <= W + 10; x += 6) {
+        var yy = y0 + Math.sin(x * 0.012 + i * 1.7) * 7 + Math.sin(x * 0.05 + i * 0.7) * 2.4;
+        if (x === -10) g.moveTo(x, yy); else g.lineTo(x, yy);
+      }
+      g.stroke();
+    }
+    g.globalAlpha = 1;
+    // Innenrahmen (dunkle Fassung + Goldlinie)
+    g.strokeStyle = '#1d0f04'; g.lineWidth = 10; g.strokeRect(4, 4, W - 8, H - 8);
+    g.strokeStyle = 'rgba(216,178,92,.85)'; g.lineWidth = 1.4; g.strokeRect(11, 11, W - 22, H - 22);
+    // Titel-Gravur
+    g.fillStyle = 'rgba(242,214,143,.9)';
+    g.font = '600 13px Georgia, "Times New Roman", serif';
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.letterSpacing = '6px';
+    g.fillText('G A L T O N   B O A R D', W / 2, 30);
+    g.fillStyle = 'rgba(207,190,158,.55)';
+    g.font = '9px Georgia, serif';
+    g.letterSpacing = '2px';
+    g.fillText('G A L T O N S C H E S   B R E T T', W / 2, 49);
+    // Abwurfschacht
+    g.fillStyle = 'rgba(10,5,1,.5)';
+    g.beginPath(); g.moveTo(CX - 12, 56); g.lineTo(CX + 12, 56); g.lineTo(CX + 12, PAD_T - 4); g.lineTo(CX - 12, PAD_T - 4); g.closePath(); g.fill();
+    // Fächer-Boden (V03): dezent, ohne Trennwände/Stapel – die Verteilung lebt
+    // im Histogramm mit Glockenkurve darunter.
+    g.strokeStyle = 'rgba(216,178,92,.55)'; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(PAD_L - 8, floorY - 4); g.lineTo(W - PAD_R + 8, floorY - 4); g.stroke();
+    // Nägel (Messing, mit Glanzpunkt + Schatten)
+    var r0, k;
+    for (r0 = 0; r0 < pegGrid.length; r0++) {
+      for (k = 0; k < pegGrid[r0].length; k++) {
+        var p = pegGrid[r0][k];
+        // Schatten
+        g.fillStyle = 'rgba(0,0,0,.4)';
+        g.beginPath(); g.arc(p.x + 1.4, p.y + 2.2, p.r + 1.6, 0, 6.2832); g.fill();
+        // Messingkörper
+        var grad = g.createRadialGradient(p.x - p.r * 0.35, p.y - p.r * 0.4, p.r * 0.15, p.x, p.y, p.r * 1.35);
+        grad.addColorStop(0, '#f6df9c');
+        grad.addColorStop(0.55, '#d8b25c');
+        grad.addColorStop(1, '#7a5a1e');
+        g.fillStyle = grad;
+        g.beginPath(); g.arc(p.x, p.y, p.r + 1.7, 0, 6.2832); g.fill();
+        // Kante
+        g.strokeStyle = 'rgba(60,40,8,.8)'; g.lineWidth = 0.8;
+        g.beginPath(); g.arc(p.x, p.y, p.r + 1.7, 0, 6.2832); g.stroke();
+        // Glanzpunkt
+        g.fillStyle = 'rgba(255,255,255,.85)';
+        g.beginPath(); g.arc(p.x - p.r * 0.4, p.y - p.r * 0.5, p.r * 0.28, 0, 6.2832); g.fill();
+      }
+    }
+    // Glasscheiben-Glanz (dezent diagonal)
+    g.fillStyle = 'rgba(255,255,255,.035)';
+    g.beginPath();
+    g.moveTo(W * 0.2, 0); g.lineTo(W * 0.38, 0); g.lineTo(W * 0.02, H); g.lineTo(0, H); g.closePath(); g.fill();
+    // Vignette
+    var vg = g.createRadialGradient(W / 2, H / 2, H * 0.35, W / 2, H / 2, H * 1.05);
+    vg.addColorStop(0, 'rgba(0,0,0,0)');
+    vg.addColorStop(1, 'rgba(0,0,0,.34)');
+    g.fillStyle = vg; g.fillRect(0, 0, W, H);
+  }
+
+  // ---------- Kugel-Sprite ----------
+  function buildBallSprite() {
+    var r = state.ballR;
+    var size = Math.max(8, Math.ceil((r + 3) * 2 * dpr));
+    ballSprite = document.createElement('canvas');
+    ballSprite.width = size; ballSprite.height = size;
+    var g = ballSprite.getContext('2d');
+    g.scale(dpr, dpr);
+    var cx = r + 3, cy = r + 3;
+    // weicher Schatten
+    g.fillStyle = 'rgba(0,0,0,.45)';
+    g.beginPath(); g.ellipse(cx + 1, cy + 2, r + 1, r * 0.72, 0, 0, 6.2832); g.fill();
+    // poliertes dunkles Holz
+    var grad = g.createRadialGradient(cx - r * 0.4, cy - r * 0.5, r * 0.12, cx, cy, r * 1.05);
+    grad.addColorStop(0, '#8a5a30');
+    grad.addColorStop(0.4, '#4c2c14');
+    grad.addColorStop(0.85, '#1c0e05');
+    grad.addColorStop(1, '#0d0602');
+    g.fillStyle = grad;
+    g.beginPath(); g.arc(cx, cy, r, 0, 6.2832); g.fill();
+    // Glanzpunkt
+    g.fillStyle = 'rgba(255,250,235,.95)';
+    g.beginPath(); g.arc(cx - r * 0.38, cy - r * 0.45, r * 0.22, 0, 6.2832); g.fill();
+  }
+
+  // ---------- Simulation zurücksetzen ----------
+  function buildSim() {
+    buildGeom();
+    buildPegs();
+    buildBackground();
+    buildBallSprite();
+    balls = []; restList = []; buckets.clear();
+    dropped = 0; spawnIdx = 0; spawnAcc = 0;
+    updateStats();
+  }
+
+  // ---------- Steuerung ----------
+  function start() {
+    readParams();
+    if (!running || balls.length === 0) {
+      // sauberer Start: läuft bereits → nichts; sonst ggf. weiterlaufen lassen
+      running = true;
+      paused = false;
+      ensureAudio();
+      if (rafId === null) { lastTs = 0; rafId = requestAnimationFrame(frame); }
+    }
+    el.btnStart.innerHTML = '<b>■</b> Start';
+    el.btnPause.disabled = false;
+    el.btnPause.innerHTML = '<b>⏸</b> Pause';
+  }
+  function pause() {
+    paused = !paused;
+    el.btnPause.innerHTML = paused ? '<b>▶</b> Weiter' : '<b>⏸</b> Pause';
+  }
+  function reset() {
+    running = false; paused = false;
+    if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+    readParams();
+    buildSim();
+    drawHistogram();
+    el.btnStart.innerHTML = '<b>▶</b> Start';
+    el.btnPause.disabled = true;
+    el.btnPause.innerHTML = '<b>⏸</b> Pause';
+  }
+
+  // ---------- Kugeln ----------
+  function spawnNow() {
+    // Physikalisch realistische Abwurf-Ungenauigkeit: Jede Kugel startet mit
+    // minimal anderer Position/Kippung (analog zum realen Einwurf von Hand).
+    // DAS ist die "chaotische Empfindlichkeit", die die 50/50-Streuung an den
+    // Nägeln auslöst – kein Zufallsgenerator in der Kollision selbst.
+    var jitterX = (rng() - 0.5) * GX * 0.5;          // ±25 % Pegbreite
+    var tilt = (rng() - 0.5) * 0.20;                 // ±0.1 rad Kippung
+    var vx0 = tilt * 60;                              // anfängliche Seitengeschw.
+    var x = CX + jitterX;
+    balls.push({ x: x, y: PAD_T - 8, vx: vx0, vy: 40 * (0.92 + rng() * 0.16), rot: rng() * 6.28, state: 'fall' });
+    spawnIdx++;
+  }
+
+  // ---------- Physik (fixer Substep) ----------
+  function stepWorld(dtReal) {
+    var sub = Math.max(1, Math.min(MAX_SUBSTEPS, Math.ceil(dtReal / DT_STEP)));
+    var h = dtReal / sub;
+    var s;
+    for (s = 0; s < sub; s++) physicsStep(h);
+  }
+  function physicsStep(h) {
+    var G = state.grav * G_SCALE;
+    var drag = Math.pow(1 - AIR_DRAG, h);   // pro Sekunde skalieren
+    // Moderate Benutzer-Elastizität, aber gedeckelt: volle 0.62 lässt Kugeln zu
+    // stark quer springen (σ≈2.5), 0.25 zu klebrig (σ≈1.5). 0.30 = natürliches
+    // Abprallen + saubere Glockenkurve (σ≈1.94, χ²=4.26 bei 300 Kugeln).
+    var restPeg = Math.min(state.rest, 0.30);
+    var pegR0 = pegR();
+    // Wände DIREKT hinter den äußersten Pegs der obersten Reihe (n+1 Pegs):
+    // kein Wand-Korridor – Kugeln treffen immer einen Nagel, nie eine glatte
+    // Wand, an der sie entlangschmieren könnten.
+    var wallL = CX - (pegGrid[0].length - 1) * GX / 2 - pegR0 - 1;
+    var wallR = CX + (pegGrid[0].length - 1) * GX / 2 + pegR0 + 1;
+    var i, j;
+    // 1) Kugeln integrieren + Peg-Kollisionen (nur fallende Kugeln)
+    for (i = 0; i < balls.length; i++) {
+      var b = balls[i];
+      if (b.state !== 'fall') continue;
+      b.vy += G * h;
+      b.vx *= drag; b.vy *= drag;
+      b.x += b.vx * h;
+      b.y += b.vy * h;
+      b.rot += (b.vx / Math.max(1, state.ballR)) * h;
+      // Peg-Kollision: nur benachbarte Reihen prüfen
+      var rowIdx = Math.floor((b.y - PAD_T) / RY);
+      var r0 = Math.max(0, rowIdx - 1), r1 = Math.min(state.rows - 1, rowIdx + 1);
+      for (var r = r0; r <= r1; r++) {
+        var row = pegGrid[r];
+        for (var c = 0; c < row.length; c++) {
+          var p = row[c];
+          var dx = b.x - p.x, dy = b.y - p.y;
+          var d2 = dx * dx + dy * dy;
+          var rr = state.ballR + pegR0;
+          if (d2 < rr * rr && d2 > 1e-9) {
+            var d = Math.sqrt(d2);
+            var nx = dx / d, ny = dy / d;
+            var overlap = rr - d;
+            b.x += nx * overlap; b.y += ny * overlap;
+            var vn = b.vx * nx + b.vy * ny;
+            if (vn < 0) {
+              // Normalen-Restitution: fast absorbierend (0.05) – die Kugel
+              // "klebt" am Nagel statt zu springen.
+              var imp = -(1 + restPeg) * vn;
+              b.vx += imp * nx; b.vy += imp * ny;
+              // TANGENTIALE Reibung (der entscheidende Teil!): Die Komponente
+              // senkrecht zur Normalen (vt) wird stark gedämpft, damit die Kugel
+              // vom Nagel ABROLLT statt quer über das Brett zu springen.
+              var tx = -ny, ty = nx;
+              var vTang = b.vx * tx + b.vy * ty;   // tangentiale Komponente
+              vTang *= 0.55;                       // Rollreibung: moderate Dämpfung – Kugel rollt natürlich ab (σ≈1.95)
+              var vNorm = b.vx * nx + b.vy * ny;   // normale Komponente (fast 0)
+              b.vx = vTang * tx + vNorm * nx;
+              b.vy = vTang * ty + vNorm * ny;
+              var speedHit = Math.abs(vn);
+              if (speedHit > 18) tickSound(Math.min(0.4, speedHit / 900), 1500 - (state.ballR - 2) * 90);
+            }
+          }
+        }
+      }
+      // Wände
+      if (b.x < wallL + state.ballR) { b.x = wallL + state.ballR; if (b.vx < 0) b.vx = -b.vx * REST_WALL; }
+      if (b.x > wallR - state.ballR) { b.x = wallR - state.ballR; if (b.vx > 0) b.vx = -b.vx * REST_WALL; }
+      // Fach-Boden erreicht?
+      if (b.y > floorY && b.vy > 0) {
+        settleBall(b);
+      } else if (b.y > H + 40 && b.state === 'fall') {
+        // Sicherheitsnetz (nie stillstehen lassen)
+        settleBall(b);
+      }
+    }
+    // 2) Kugel-Kugel (räumliche Buckets, nur gleiche/benachbarte Bänder)
+    buildBuckets();
+    var rr2 = state.ballR * 2;
+    for (i = 0; i < balls.length; i++) {
+      var a = balls[i];
+      if (a.state !== 'fall') continue;
+      var bi = Math.floor((a.y - PAD_T) / (RY * 2));
+      var list = [];
+      addBucketTo(buckets, bi, list);
+      addBucketTo(buckets, bi - 1, list);
+      addBucketTo(buckets, bi + 1, list);
+      for (j = 0; j < list.length; j++) {
+        var k = list[j];
+        if (k <= i) continue;
+        var other = balls[k];
+        var dxx = a.x - other.x, dyy = a.y - other.y;
+        var d22 = dxx * dxx + dyy * dyy;
+        if (d22 < rr2 * rr2 && d22 > 1e-9) {
+          var dd = Math.sqrt(d22);
+          var nxx = dxx / dd, nyy = dyy / dd;
+          var ov = rr2 - dd;
+          // Nur minimale Aufweichung: Kugel-Kugel-Stöße sind optisches Beiwerk.
+          // Zu starke Korrektur "schaufelt" die Verteilung künstlich breiter,
+          // weil ein Kugel-Strom seitliche Energie an Nachbarn weitergibt.
+          var corr = ov * 0.5 * 0.12;
+          a.x += nxx * corr; a.y += nyy * corr;
+          other.x -= nxx * corr; other.y -= nyy * corr;
+          var rvx = a.vx - other.vx, rvy = a.vy - other.vy;
+          var vnn = rvx * nxx + rvy * nyy;
+          if (vnn < 0) {
+            // Stark gedämpfte Stoßantwort: nur minimale seitliche Impulsweitergabe
+            var jimp = -(1 + REST_BALL * 0.15) * vnn * 0.12;
+            a.vx += jimp * nxx; a.vy += jimp * nyy;
+            other.vx -= jimp * nxx; other.vy -= jimp * nyy;
+          }
+        }
+      }
+    }
+  }
+  function addBucketTo(map, idx, out) {
+    var arr = map.get(idx);
+    if (arr) { for (var i = 0; i < arr.length; i++) out.push(arr[i]); }
+  }
+  function buildBuckets() {
+    buckets.clear();
+    var i;
+    for (i = 0; i < balls.length; i++) {
+      var b = balls[i];
+      if (b.state !== 'fall') continue;
+      var idx = Math.floor((b.y - PAD_T) / (RY * 2));
+      if (!buckets.has(idx)) buckets.set(idx, []);
+      buckets.get(idx).push(i);
+    }
+  }
+  function settleBall(b) {
+    if (b.state !== 'fall') return;
+    // Fach finden: nächster Bin-Mittelpunkt
+    var best = 0, bestD = 1e18;
+    var c;
+    for (c = 0; c < binCenters.length; c++) {
+      var dd = Math.abs(b.x - binCenters[c]);
+      if (dd < bestD) { bestD = dd; best = c; }
+    }
+    // V03: Kugel ist durch das Brett gefallen → nur zählen (Fach-Statistik für
+    // Histogramm/Glockenkurve), KEINE Stapel-Animation unter dem Brett mehr.
+    b.state = 'rest'; b.bin = best;
+    bins[best]++;
+    dropped++;
+    tickSound(0.06, 320);
+  }
+  function removeSettled() {
+    // Ruhende Kugeln aus dem aktiven Array entfernen (Zustand bleibt in restList)
+    if (balls.length === 0) return;
+    var out = [], i;
+    for (i = 0; i < balls.length; i++) if (balls[i].state === 'fall') out.push(balls[i]);
+    balls = out;
+  }
+
+  // ---------- Rendering ----------
+  function render() {
+    var ctx = el.board.getContext('2d');
+    var w = W, h = H;
+    if (el.board.width !== Math.round(w * dpr)) { el.board.width = Math.round(w * dpr); el.board.height = Math.round(h * dpr); }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.drawImage(bg, 0, 0, w, h);
+    // V03+: keine ruhenden Kugeln – Kugeln verschwinden nach der letzten Ebene.
+    // Fallende Kugeln (var i deklariert – sonst ReferenceError im strict mode!)
+    var i;
+    for (i = 0; i < balls.length; i++) {
+      var b = balls[i];
+      if (b.state !== 'fall') continue;
+      drawBall(ctx, b.x, b.y, b.rot);
+    }
+    // leichter Glasschimmer über der Scheibe
+    ctx.fillStyle = 'rgba(255,255,255,.02)';
+    ctx.fillRect(0, 0, w, h);
+  }
+  function drawBall(ctx, x, y, rot) {
+    var r = state.ballR;
+    // Kugel
+    ctx.drawImage(ballSprite, x - r - 3, y - r - 3, (r + 3) * 2, (r + 3) * 2);
+    // Rotationsmarker (kleiner kreisender Reflex) – belebt die Rotation optisch
+    var mx = x + Math.cos(rot) * r * 0.45, my = y + Math.sin(rot) * r * 0.45;
+    ctx.fillStyle = 'rgba(255,250,235,.35)';
+    ctx.beginPath(); ctx.arc(mx, my, Math.max(0.7, r * 0.14), 0, 6.2832); ctx.fill();
+  }
+
+  // ---------- Histogramm ----------
+  function drawHistogram() {
+    var cv = el.hist, ctx = cv.getContext('2d');
+    var w = cv.clientWidth || el.hist.parentElement.clientWidth || 700;
+    var h = 170;
+    cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    var nBins = bins.length;
+    if (nBins === 0) return;
+    var padB = 22, padT = 14, padX = 10;
+    var plotW = w - padX * 2, plotH = h - padB - padT;
+    var slot = plotW / nBins, barW = Math.max(3, slot * 0.62);
+    var maxC = 1;
+    for (var i = 0; i < nBins; i++) maxC = Math.max(maxC, bins[i]);
+    // Achse
+    ctx.strokeStyle = 'rgba(216,178,92,.4)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(padX, h - padB + 2); ctx.lineTo(w - padX, h - padB + 2); ctx.stroke();
+    var b;
+    for (b = 0; b < nBins; b++) {
+      var cx = padX + b * slot + slot / 2;
+      var bh = bins[b] > 0 ? Math.max(2, (bins[b] / maxC) * plotH) : 0;
+      var grad = ctx.createLinearGradient(0, h - padB, 0, h - padB - bh);
+      grad.addColorStop(0, '#8a6d1f');
+      grad.addColorStop(1, '#f2d68f');
+      ctx.fillStyle = grad;
+      ctx.fillRect(cx - barW / 2, h - padB - bh, barW, bh);
+      if (bins[b] > 0) {
+        ctx.fillStyle = 'rgba(242,214,143,.85)';
+        ctx.font = '10px Arial, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+        ctx.fillText(String(bins[b]), cx, h - padB - bh - 3);
+      }
+      ctx.fillStyle = 'rgba(207,190,158,.65)';
+      ctx.font = '10px Arial, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText(String(b), cx, h - padB + 4);
+    }
+    // Glockenkurve (Normalverteilung aus den Daten)
+    if (dropped >= 10) {
+      var mu = 0, sum = 0;
+      for (b = 0; b < nBins; b++) { mu += b * bins[b]; sum += bins[b]; }
+      mu /= sum;
+      var v = 0;
+      for (b = 0; b < nBins; b++) v += bins[b] * (b - mu) * (b - mu);
+      v /= sum;
+      var sd = Math.sqrt(v);
+      if (sd > 1e-9) {
+        ctx.strokeStyle = 'rgba(232,195,122,.9)';
+        ctx.lineWidth = 2;
+        ctx.shadowColor = 'rgba(232,195,122,.5)'; ctx.shadowBlur = 6;
+        ctx.beginPath();
+        var steps = 200;
+        for (var s = 0; s <= steps; s++) {
+          var k = (s / steps) * (nBins - 1);
+          var z = (k - mu) / sd;
+          var y = Math.exp(-0.5 * z * z) / (sd * Math.sqrt(2 * Math.PI));
+          var yMax = 1 / (sd * Math.sqrt(2 * Math.PI));
+          var px = padX + (k / (nBins - 1)) * plotW;
+          var py = h - padB - (y / yMax) * plotH;
+          if (s === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = 'rgba(232,195,122,.9)';
+        ctx.font = '10px Arial, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+        ctx.fillText('μ = ' + mu.toFixed(2) + ' · σ = ' + sd.toFixed(2), padX + 4, padT - 8);
+        el.histNote.textContent = 'Kurve: Normalverteilung mit empirischem μ und σ aus ' + dropped + ' Kugeln.';
+      }
+    } else {
+      el.histNote.textContent = 'Noch keine Kugeln abgeworfen.';
+    }
+    drawLegends();
+  }
+  function drawLegends() {
+    // Histogramm-Legende wird per HTML-Legende abgedeckt; hier nur Datenstände
+  }
+
+  // ---------- Statistiken ----------
+  function updateStats() {
+    var total = dropped;
+    el.stats.total.textContent = String(total);
+    el.stats.totalD.textContent = 'von ' + state.balls;
+    var theoMu = state.rows / 2;
+    var theoSigma = Math.sqrt(state.rows * 0.25);
+    el.stats.mean.textContent = '—'; el.stats.sigma.textContent = '—'; el.stats.mode.textContent = '—';
+    if (total > 0) {
+      var mu = 0, sum = 0, i;
+      var maxC = 0, mode = -1;
+      for (i = 0; i < bins.length; i++) { mu += i * bins[i]; sum += bins[i]; if (bins[i] > maxC) { maxC = bins[i]; mode = i; } }
+      mu /= sum;
+      var v = 0;
+      for (i = 0; i < bins.length; i++) v += bins[i] * (i - mu) * (i - mu);
+      v /= sum;
+      el.stats.mean.textContent = mu.toFixed(2);
+      el.stats.sigma.textContent = Math.sqrt(v).toFixed(2);
+      el.stats.mode.textContent = String(mode);
+      el.stats.modeD.textContent = maxC + ' Kugeln';
+    }
+    // theoretische Referenzzeile
+    var d = el.stats.mean.parentElement.querySelector('.d');
+    if (d) d.textContent = 'theoretisch μ = ' + theoMu.toFixed(1);
+    var d2 = el.stats.sigma.parentElement.querySelector('.d');
+    if (d2) d2.textContent = 'theoretisch σ = ' + theoSigma.toFixed(2);
+  }
+
+  // ---------- Hauptschleife ----------
+  function frame(ts) {
+    rafId = requestAnimationFrame(frame);
+    if (lastTs === 0) lastTs = ts;
+    var raw = Math.min((ts - lastTs) / 1000, 0.05);
+    lastTs = ts;
+    if (!paused && running) {
+      // Kugeln spawnen (Echtzeit, unabhängig von speed)
+      spawnAcc += raw * 1000;
+      var itv = state.interval;
+      while (spawnAcc >= itv && dropped + balls.length < state.balls) {
+        spawnAcc -= itv;
+        spawnNow();
+      }
+      // Physik
+      stepWorld(raw * state.speed);
+      removeSettled();
+    }
+    render();
+    if (dropped >= state.balls && balls.length === 0) {
+      // Lauf zu Ende: automatisch stoppen, damit Histogramm stehen bleibt
+      running = false;
+      el.btnStart.innerHTML = '<b>▶</b> Start';
+      el.btnPause.disabled = true;
+    }
+    drawHistogram();
+    // Live-Statistik-Cards aktualisieren (nur alle 500 ms – teuer, da DOM)
+    if (performance.now() - lastStatsUpdate > 500) {
+      updateStats();
+      lastStatsUpdate = performance.now();
+    }
+    // FPS
+    fpsAcc += raw; fpsFrames++;
+    if (fpsAcc >= 0.5) {
+      el.fps.textContent = String(Math.round(fpsFrames / fpsAcc));
+      fpsAcc = 0; fpsFrames = 0;
+    }
+  }
+
+  // ---------- Rechner ----------
+  function binomCoeff(n, k) {
+    if (k < 0 || k > n) return 0;
+    k = Math.min(k, n - k);
+    var res = 1, i;
+    for (i = 1; i <= k; i++) res = res * (n - k + i) / i;
+    return res;
+  }
+  function logBinomProb(n, k, p) {
+    var l = Math.log(binomCoeff(n, k)) + k * Math.log(p) + (n - k) * Math.log(1 - p);
+    return Math.exp(l);
+  }
+  function normPdf(z) { return Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI); }
+  function calc() {
+    var n = finiteNum(elCalcN.value, 12, 1, 1000);
+    var p = finiteNum(elCalcP.value, 0.5, 0.0001, 0.9999);
+    var k = finiteNum(elCalcK.value, Math.round(n * p), 0, n);
+    elCalcN.value = n; elCalcP.value = p; elCalcK.value = k;
+    var c = binomCoeff(n, k);
+    var ex = logBinomProb(n, k, p);
+    var cum = 0, i;
+    for (i = 0; i <= k; i++) cum += logBinomProb(n, i, p);
+    var mu = n * p, sigma2 = n * p * (1 - p), sigma = Math.sqrt(sigma2);
+    var z = sigma > 1e-12 ? (k - mu) / sigma : NaN;
+    var phi = isNaN(z) ? NaN : normPdf(z);
+    elOutComb.textContent = fmt(c);
+    elOutExact.textContent = fmtP(ex);
+    elOutCum.textContent = fmtP(cum);
+    elOutMean.textContent = fmt(mu);
+    elOutVar.textContent = fmt(sigma2);
+    elOutSigma.textContent = fmt(sigma);
+    elOutZ.textContent = isNaN(z) ? '—' : z.toFixed(3);
+    elOutPhi.textContent = isNaN(phi) ? '—' : fmtP(phi);
+    renderPascal(n, k);
+  }
+  function fmt(x) {
+    return x.toLocaleString('de-DE', { maximumFractionDigits: 6 });
+  }
+  function fmtP(x) {
+    if (x >= 0.01) return (x * 100).toFixed(2) + ' %';
+    if (x >= 1e-6) return x.toExponential(3);
+    return '< 0.0001 %';
+  }
+  function renderPascal(n, k) {
+    var maxN = Math.min(n, 14);
+    var rowsArr = [[1]];
+    var r, c;
+    for (r = 1; r <= maxN; r++) {
+      var row = [1];
+      for (c = 1; c < r; c++) row.push(rowsArr[r - 1][c - 1] + rowsArr[r - 1][c]);
+      row.push(1);
+      rowsArr.push(row);
+    }
+    var html = '<thead><tr><th>n</th>';
+    for (c = 0; c <= maxN; c++) html += '<th>k=' + c + '</th>';
+    html += '</tr></thead><tbody>';
+    for (r = 0; r <= maxN; r++) {
+      html += '<tr><th>' + r + '</th>';
+      for (c = 0; c <= maxN; c++) {
+        var val = c <= r ? rowsArr[r][c] : '·';
+        var cls = (r === n && c === k) ? ' class="hl"' : '';
+        html += '<td' + cls + '>' + (typeof val === 'number' ? fmt(val) : val) + '</td>';
+      }
+      html += '</tr>';
+    }
+    html += '</tbody>';
+    pascTable.innerHTML = html;
+  }
+
+  // Rechner-DOM
+  var elCalcN = $('calcN'), elCalcP = $('calcP'), elCalcK = $('calcK');
+  var elOutComb = $('oComb'), elOutExact = $('oExact'), elOutCum = $('oCum'),
+      elOutMean = $('oMean'), elOutVar = $('oVar'), elOutSigma = $('oSigma'),
+      elOutZ = $('oZ'), elOutPhi = $('oPhi'), pascTable = $('pascTable');
+
+  // ---------- Events ----------
+  function onParamChange() {
+    readParams();
+    var geomChanged = true;
+    // Jede Geometrie-Änderung → Reset für konsistente Welt
+    reset(false);
+  }
+  function onLiveChange() {
+    readParams();
+  }
+
+  function init() {
+    readParams();
+    buildSim();
+    initTips();
+    calc();
+    requestAnimationFrame(render);
+    // Buttons
+    el.btnStart.addEventListener('click', function () {
+      if (!running) {
+        if (dropped >= state.balls && balls.length === 0 && dropped > 0) reset(false);
+      }
+      start();
+    });
+    el.btnPause.addEventListener('click', pause);
+    el.btnReset.addEventListener('click', function () { reset(false); });
+    // Parameter-Events
+    ['balls', 'rows', 'ballR'].forEach(function (id) {
+      $(id).addEventListener('change', onParamChange);
+    });
+    ['rest', 'grav', 'speed', 'interval', 'seed'].forEach(function (id) {
+      $(id).addEventListener('input', onLiveChange);
+      $(id).addEventListener('change', onLiveChange);
+    });
+    el.sound.addEventListener('change', function () {
+      state.sound = el.sound.checked;
+      if (el.sound.checked) ensureAudio();
+    });
+    // Rechner
+    ['calcN', 'calcP', 'calcK'].forEach(function (id) { $(id).addEventListener('input', calc); });
+    // Leertaste = Pause
+    document.addEventListener('keydown', function (e) {
+      if (e.code !== 'Space') return;
+      var t = e.target;
+      if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'BUTTON')) return;
+      e.preventDefault();
+      if (running) pause(); else start();
+    });
+    // Resize
+    var ro = null;
+    if (window.ResizeObserver) {
+      ro = new ResizeObserver(function () { reset(false); });
+      ro.observe(el.board.parentElement);
+    } else {
+      window.addEventListener('resize', function () { reset(false); });
+    }
+    updateStats();
+  }
+
+  // ---------- Test-Harness-Export ----------
+  window.__gb = {
+    get state() { return state; },
+    set state(v) { state = v; },
+    get balls() { return balls; },
+    get restList() { return restList; },
+    get bins() { return bins; },
+    get pegs() { return pegs; },
+    get dropped() { return dropped; },
+    get W() { return W; }, get H() { return H; },
+    readParams: readParams,
+    buildSim: buildSim, buildGeom: buildGeom, buildPegs: buildPegs,
+    spawnNow: spawnNow, stepWorld: stepWorld, physicsStep: physicsStep,
+    settleBall: settleBall, removeSettled: removeSettled, render: render, drawHistogram: drawHistogram,
+    updateStats: updateStats, start: start, pause: pause, reset: reset,
+    binomCoeff: binomCoeff, logBinomProb: logBinomProb, normPdf: normPdf,
+    calc: calc,
+    setParam: function (key, val) {
+      var node = el[key];
+      if (node) { node.value = val; readParams(); }
+    },
+    _el: el
+  };
+
+  // Start
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>

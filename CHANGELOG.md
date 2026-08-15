@@ -1,5 +1,36 @@
 # Changelog – Galton Board
 
+## [V05] – 2026-08-15
+
+### Fix: Unnatürliche Kugelbewegung (Kleben an Nägeln, Schmieren an Wänden)
+
+**User-Meldung:** Kugeln kleben an den Nägeln und rutschen an den Seiten herunter.
+**Ursachen (zwei):**
+1. **Wand-Korridor:** Die Wände standen `GX/2` (~15 px) AUSSERHALB der äußersten Pegs.
+   Kugeln, die in diesen schmalen Spalt fielen, trafen nie mehr einen Nagel und
+   schmierten sichtbar an der glatten Wand entlang.
+2. **Zu aggressive Tangentialdämpfung (0.35):** Die Kugel verlor nach jedem Nagel-
+   Kontakt 65 % ihres seitlichen Schwungs und „saugte“ sich an den Nagel fest.
+
+**Fixes:**
+- Wände stehen jetzt DIREKT hinter den äußersten Pegs (`pegR+1` px) → Kugeln treffen
+  immer einen Nagel, nie eine glatte Wand. Kein Rand-Korridor mehr.
+- Rollreibung moderat: `vTang *= 0.55` (statt 0.35) – Kugeln rollen natürlich ab.
+- Elastizität gedeckelt auf 0.30: volle 0.62 spreizt (σ≈2.5), 0.05 klebt (σ≈1.5);
+  0.30 = sichtbares Abprallen + saubere Glockenkurve.
+- Tote Doppel-Zuweisung entfernt (vorher wurde der 0.05-Clamp sofort von `state.rest`
+  überschrieben – der gedachte Klebe-Modus war nie aktiv).
+
+### Verifikation V05
+- Volllauf-Harness `verify_fullrun.js`:
+  - 300 Kugeln/12 Ebenen: σ=1.70 (Theorie 1.73), χ²=3.30 ✅
+  - 600 Kugeln/12 Ebenen: σ=1.66, χ²=12.24 ✅
+  - 300 Kugeln/20 Ebenen: σ=2.38 (Theorie 2.24), χ²=6.78 ✅
+- Browser-E2E: 0 Kugeln an den Wänden (bei 39 aktiven), 60 FPS; 300 gelandet,
+  μ=6.04, σ=1.64 ✅
+- Statisch: Script-Balance, node --check, 34 IDs ✅
+
+---
 ## [V04] – 2026-08-15
 
 ### Fix: Animation zeigte nichts mehr (User-Bugmeldung)
