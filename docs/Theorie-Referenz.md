@@ -1,6 +1,6 @@
 # Theorie-Referenz – Galton Board
 
-Hintergrundwissen, Formeln und Quellen hinter `build/Galton_Board_V01.html`.
+Dokumentation der Mathematik hinter `build/Galton_Board_V10.1.html`.
 
 ## 1. Bernoulli-Experiment
 
@@ -30,7 +30,7 @@ Symmetrie `C(n, k) = C(n, n−k)` → symmetrische Verteilung.
 σ = √(n·p·(1−p))
 ```
 
-Bei 12 Ebenen: μ = 6.0, σ = √3 ≈ 1.73. Die gemessene Simulation erreicht σ ≈ 1.9–2.0.
+Bei 12 Ebenen: μ = 6.0, σ = √3 ≈ 1.73. Die gemessene Simulation erreicht σ ≈ 1.66–1.70.
 
 ## 5. De-Moivre-Laplace-Theorem (1812)
 
@@ -90,8 +90,12 @@ wichtig für eine ehrliche Betrachtung (u. a. Gould, *The Mismeasure of Man*, 19
 
 ## 10. Empirische Eichung
 
-Die Simulation verwendet die tangentiale Peg-Reibung 0.35 und Restitution 0.05, um die
-binomiale Glockenkurve korrekt zu reproduzieren. Diese beiden Werte wurden per
-χ²-Gütetest gegen B(n, 0.5) kalibriert (300/600/20-Ebenen-Läufe). Abweichende
-Physik-Parameter (z. B. hohe Elastizität) verschieben σ nach oben – das ist realistisch
-(„verspielte“ Bretter streuen breiter).
+Die Simulation verwendet eine **adaptive tangentiale Rollreibung**:
+`vTang *= 0.55 + Math.max(0, 12 − state.rows) · 0.025`
+
+Bei n ≥ 12 bleibt der Faktor 0.55 (bewährt); bei kleineren n steigt er, um auch die
+Randfächer zu erreichen. Die Normalen-Restitution ist auf `min(state.rest, 0.30)` gedeckelt.
+Diese Werte wurden per χ²-Gütetest gegen B(n, 0.5) über den gesamten Ebenenbereich
+(3–20) kalibriert (0 Fehler über 6 Seeds pro Ebenenzahl). Abweichende Physik-Parameter
+(z. B. hohe Elastizität) verschieben σ nach oben – das ist realistisch
+(„verspielte" Bretter streuen breiter).
