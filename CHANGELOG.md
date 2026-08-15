@@ -1,5 +1,30 @@
 # Changelog – Galton Board
 
+## [V08] – 2026-08-15
+
+### Änderungen: Vollwertige Simulationssteuerung
+
+- **Start ⇄ Stopp (Toggle):** Der Start-Button wird nach dem Klick zu „■ Stopp"
+  und startet die Simulation. Klick auf Stopp bricht die Simulation ab (Brett
+  + Fächer geleert), und der Button wird wieder zu „▶ Start". Stopp verändert
+  KEINE Parameter.
+- **Pause/Weiter:** Der Pause-Button pausiert die Simulation und wechselt zu
+  „▶ Weiter"; erneuter Klick resumt zu „⏸ Pause". Zusammen mit Start/Stopp ist
+  das jetzt eine vollwertige Steuerung (Start/Stopp · Pause · Reset).
+- **Reset = alle Parameter auf Default:** Der Reset-Button setzt jetzt zusätzlich
+  ALLE User-Parameter (Kugeln=300, Ebenen=12, Radius=4.5, Elastizität=0.62,
+  Gravitation=9.81, Speed=1, Intervall=38, Seed=42, Sound=an) zurück und baut
+  die Simulation neu auf. `reset(keepParams)` bleibt für Resize/Parameter-
+  Änderungen intern erhalten (Parameter werden dann beibehalten).
+- Neue `stop()`-Funktion; Space-Taste togglet weiterhin Start/Stopp bzw. Pause.
+
+### Verifikation V08
+- Statisch: Script-Balance ✅, node --check ✅, 33 IDs ✅
+- Physik 300/12: μ=5.91, σ=1.70, χ²=3.30 ✅ · 600/12: μ=5.87, σ=1.66, χ²=12.24 ✅
+- Browser-FSM: Start→„Stopp", Pause→„Weiter"→„Pause", Stopp→„Start"+Parameter
+  bleiben (500/15), Reset→Parameter Default (300/12) ✅
+
+---
 ## [V07] – 2026-08-15
 
 ### Änderungen (User-Wünsche)
