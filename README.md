@@ -5,11 +5,13 @@ als **eine HTML-Datei**. Edler Holzrahmen, goldene Messingnägel, glänzende Kug
 Live-Histogramm mit Normalverteilungs-Overlay, interaktiver Wahrscheinlichkeitsrechner
 sowie ausführliche Theorie.
 
-**Aktuelle Version:** `build/Galton_Board_V10.1.html`
+**Aktuelle Version:** `build/Galton_Board_V10.html`
+
+**🌐 Live:** [https://galton-board.ingenieur-tools.de/](https://galton-board.ingenieur-tools.de/)
 
 ## Schnellstart
 
-Einfach `build/Galton_Board_V10.1.html` im Browser öffnen (Doppelklick genügt – keine
+Einfach `build/Galton_Board_V10.html` im Browser öffnen (Doppelklick genügt – keine
 Installation, kein Server).
 
 ## Features
@@ -40,7 +42,7 @@ Installation, kein Server).
 ```
 Galton Board/
 ├── build/
-│   └── Galton_Board_V10.1.html   ← Lieferbare Datei (iteriert als _V01 … _V10.1)
+│   └── Galton_Board_V10.html      ← Lieferbare Datei (iteriert als _V01 … _V10.1)
 ├── docs/
 │   ├── Physik-Modell.md           ← Formeln, Konstanten, Substep-Verfahren
 │   └── Theorie-Referenz.md        ← Mathe + Historie + Anwendungen
@@ -66,17 +68,17 @@ Jede Version wird vor Auslieferung hart geprüft:
 cd "~/Projects/Galton Board"
 
 # 1) Statisch: Syntax + IDs
-python3 tests/verify_static.py build/Galton_Board_V10.1.html
+python3 tests/verify_static.py build/Galton_Board_V10.html
 
 # 2) Volllauf: Physik + Rendering
-node tests/verify_fullrun.js build/Galton_Board_V10.1.html 300 12
-node tests/verify_fullrun.js build/Galton_Board_V10.1.html 600 12
+node tests/verify_fullrun.js build/Galton_Board_V10.html 300 12
+node tests/verify_fullrun.js build/Galton_Board_V10.html 600 12
 
 # 3) Geschwindigkeitsunabhängigkeit (20 Läufe, speed 1–20)
-node tests/verify_speed20.js build/Galton_Board_V10.1.html
+node tests/verify_speed20.js build/Galton_Board_V10.html
 
 # 4) Randfach-Diagnose über alle Ebenenzahlen
-node tests/diag_rows.js build/Galton_Board_V10.1.html
+node tests/diag_rows.js build/Galton_Board_V10.html
 ```
 
 Der Physik-Harness testet die Fachverteilung mit χ²-Gütetest gegen B(n, 0.5):
@@ -100,3 +102,18 @@ Der Physik-Harness testet die Fachverteilung mit χ²-Gütetest gegen B(n, 0.5):
 ## Versionshistorie
 
 Siehe `CHANGELOG.md`.
+
+## Datenschutz (DSGVO)
+
+Das Galton Board ist eine **vollständig lokale Anwendung** (100 % offline, keine externen
+Abhängigkeiten). Es werden **keine Cookies, kein Tracking und keine Analyse-Dienste** verwendet;
+alle Berechnungen erfolgen direkt im Browser. Der optionale Kollisions-Sound wird per WebAudio
+lokal erzeugt (keine Datenübertragung). Beim Hosting über GitHub Pages können technisch notwendige
+Server-Logdaten (IP-Adresse, Zeitpunkt) verarbeitet werden. **Impressum + Datenschutzerklärung**
+sind in der App im Footer eingebaut (Links „Impressum" / „Datenschutz").
+
+**Betreiber:** Fabian Bussenius · Jüthornstraße 50 · 22043 Hamburg · fabibuss@web.de (§ 5 DDG)
+
+## Lizenz
+
+MIT — siehe [LICENSE](LICENSE). © 2026 Fabian Bussenius.
