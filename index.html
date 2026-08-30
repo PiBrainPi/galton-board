@@ -42,7 +42,12 @@ body{
 }
 .skip{position:absolute;left:-999px;top:0;background:var(--gold);color:#1a0d04;padding:8px 14px;border-radius:0 0 8px 0;z-index:99}
 .skip:focus{left:0}
-.wrap{max-width:1080px;margin:0 auto}
+.wrap{max-width:1080px;margin:0 auto;position:relative}
+/* Sprach-Toggle (Deutsch/English) — analog Sun-Tracker: runder .tbtn oben rechts */
+.gb-toggle{position:absolute;top:16px;right:16px;z-index:50;display:flex;align-items:center;gap:10px}
+.gb-toggle .tbtn{width:44px;height:44px;border-radius:50%;border:1px solid var(--panel-line);background:rgba(10,5,1,.6);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .15s;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.gb-toggle .tbtn:hover{transform:scale(1.08);background:rgba(212,175,55,.12)}
+.gb-toggle .tbtn span{font-size:22px;line-height:1}
 /* ---------- Header ---------- */
 header.hero{text-align:center;padding:34px 16px 26px}
 header.hero .kicker{font-size:.78rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px}
@@ -214,211 +219,215 @@ details.acc .body{padding:4px 16px 14px}
 <a class="skip" href="#main">Zum Inhalt springen</a>
 <div class="wrap">
 
+<div class="gb-toggle">
+  <button class="tbtn" id="langBtn" title="Language / Sprache"><span>🇩🇪</span></button>
+</div>
+
 <header class="hero">
-  <div class="kicker">Galtonsches Brett · Quincunx</div>
+  <div class="kicker" data-i18n="kicker">Galtonsches Brett · Quincunx</div>
   <h1>Galton Board</h1>
-  <p class="sub">Eine physikalisch realistische Simulation mit edlem Holzrahmen, goldenen Messingnägeln und live berechneter Glockenkurve &ndash; inklusive interaktivem Wahrscheinlichkeitsrechner und ausführlicher Theorie.</p>
+  <p class="sub" data-i18n="sub">Eine physikalisch realistische Simulation mit edlem Holzrahmen, goldenen Messingnägeln und live berechneter Glockenkurve &ndash; inklusive interaktivem Wahrscheinlichkeitsrechner und ausführlicher Theorie.</p>
 </header>
 
 <main id="main">
 
 <!-- ============ 01 STEUERUNG ============ -->
 <section class="card" aria-labelledby="h-steuerung">
-  <h2 id="h-steuerung"><span class="no">01</span>Steuerung &amp; Parameter</h2>
-  <p class="lead">Alle Parameter live anpassbar. <b>Kugelanzahl</b> und <b>Ebenen</b> sind als gängige Werte vorbelegt. Änderungen an Brett-Geometrie setzen die Simulation automatisch zurück.</p>
+  <h2 id="h-steuerung" data-i18n="h_steuerung"><span class="no">01</span>Steuerung &amp; Parameter</h2>
+  <p class="lead" data-i18n="lead_steuerung">Alle Parameter live anpassbar. <b>Kugelanzahl</b> und <b>Ebenen</b> sind als gängige Werte vorbelegt. Änderungen an Brett-Geometrie setzen die Simulation automatisch zurück.</p>
   <div class="grid">
     <div class="field">
-      <label for="balls">Kugelanzahl <span class="info" tabindex="0" role="button" aria-label="Information über Kugelanzahl" data-title="Kugelanzahl" data-tip="Wie viele Kugeln beim Start in das Brett fallen. Frei wählbar – gängig: 300. Mehr Kugeln → vollere Glockenkurve, mehr Rechenlast.">ⓘ</span></label>
+      <label for="balls"><span data-i18n="lb_balls">Kugelanzahl</span> <span class="info" tabindex="0" role="button" aria-label="Information über Kugelanzahl" data-title="Kugelanzahl" data-i18n-tip="tip_balls" data-tip="Wie viele Kugeln beim Start in das Brett fallen. Frei wählbar – gängig: 300. Mehr Kugeln → vollere Glockenkurve, mehr Rechenlast.">ⓘ</span></label>
       <input class="input" id="balls" type="number"  step="1" value="300" inputmode="numeric">
-      <span class="hint">Default: 300</span>
+      <span class="hint" data-i18n="hint_d_300">Default: 300</span>
     </div>
     <div class="field">
-      <label for="rows">Ebenen (Nagelreihen) <span class="info" tabindex="0" role="button" aria-label="Information über Ebenen" data-title="Ebenen" data-tip="Anzahl der Peg-Reihen = Anzahl Münzwürfe n der Binomialverteilung. Frei wählbar. Es entstehen rows+1 Fächer. Gängig: 12.">ⓘ</span></label>
+      <label for="rows"><span data-i18n="lb_rows">Ebenen (Nagelreihen)</span> <span class="info" tabindex="0" role="button" aria-label="Information über Ebenen" data-title="Ebenen" data-i18n-tip="tip_rows" data-tip="Anzahl der Peg-Reihen = Anzahl Münzwürfe n der Binomialverteilung. Frei wählbar. Es entstehen rows+1 Fächer. Gängig: 12.">ⓘ</span></label>
       <input class="input" id="rows" type="number"  step="1" value="12" inputmode="numeric">
-      <span class="hint">Default: 12 → 13 Fächer</span>
+      <span class="hint" data-i18n="hint_d_rows">Default: 12 → 13 Fächer</span>
     </div>
     <div class="field">
-      <label for="ballR">Kugelgröße (px) <span class="info" tabindex="0" role="button" aria-label="Information über Kugelgröße" data-title="Kugelgröße" data-tip="Radius der Kugeln in Bildschirm-Pixeln. Frei wählbar (intern 1–10 px). Kleinere Kugeln fallen schneller und wirken filigraner; größere sind leichter zu beobachten.">ⓘ</span></label>
+      <label for="ballR"><span data-i18n="lb_ballR">Kugelgröße (px)</span> <span class="info" tabindex="0" role="button" aria-label="Information über Kugelgröße" data-title="Kugelgröße" data-i18n-tip="tip_ballR" data-tip="Radius der Kugeln in Bildschirm-Pixeln. Frei wählbar (intern 1–10 px). Kleinere Kugeln fallen schneller und wirken filigraner; größere sind leichter zu beobachten.">ⓘ</span></label>
       <input class="input" id="ballR" type="number"  step="0.5" value="4.5" inputmode="decimal">
-      <span class="hint">Default: 4.5</span>
+      <span class="hint" data-i18n="hint_d_45">Default: 4.5</span>
     </div>
     <div class="field">
-      <label for="rest">Elastizität <span class="info" tabindex="0" role="button" aria-label="Information über Elastizität" data-title="Elastizität" data-tip="Restitutionskoeffizient der Kugel-Peg-Stöße. Frei wählbar: 0 = komplett unelastisch (klebt), 1 = perfekt elastisch, >1 = Energie-Gewinn. Realistisch: 0.55–0.75.">ⓘ</span></label>
+      <label for="rest"><span data-i18n="lb_rest">Elastizität</span> <span class="info" tabindex="0" role="button" aria-label="Information über Elastizität" data-title="Elastizität" data-i18n-tip="tip_rest" data-tip="Restitutionskoeffizient der Kugel-Peg-Stöße. Frei wählbar: 0 = komplett unelastisch (klebt), 1 = perfekt elastisch, >1 = Energie-Gewinn. Realistisch: 0.55–0.75.">ⓘ</span></label>
       <input class="input" id="rest" type="number"  step="0.01" value="0.62" inputmode="decimal">
-      <span class="hint">Default: 0.62</span>
+      <span class="hint" data-i18n="hint_d_062">Default: 0.62</span>
     </div>
     <div class="field">
-      <label for="grav">Gravitation <span class="info" tabindex="0" role="button" aria-label="Information über Gravitation" data-title="Gravitation" data-tip="Skalierte Fallbeschleunigung, frei wählbar (Default 9.81). Nur die Optik der Fallgeschwindigkeit; die Verteilung ist davon unabhängig.">ⓘ</span></label>
+      <label for="grav"><span data-i18n="lb_grav">Gravitation</span> <span class="info" tabindex="0" role="button" aria-label="Information über Gravitation" data-title="Gravitation" data-i18n-tip="tip_grav" data-tip="Skalierte Fallbeschleunigung, frei wählbar (Default 9.81). Nur die Optik der Fallgeschwindigkeit; die Verteilung ist davon unabhängig.">ⓘ</span></label>
       <input class="input" id="grav" type="number"  step="0.1" value="9.81" inputmode="decimal">
-      <span class="hint">Default: 9.81 (skaliert)</span>
+      <span class="hint" data-i18n="hint_d_grav">Default: 9.81 (skaliert)</span>
     </div>
     <div class="field">
-      <label for="speed">Sim. Geschwindigkeit <span class="info" tabindex="0" role="button" aria-label="Information über Simulationsgeschwindigkeit" data-title="Geschwindigkeit" data-tip="Zeit-Raffung, frei wählbar. Bei höherem Wert fallen alle Kugeln deutlich schneller, die Physik bleibt dank fixem Substep identisch (kein Tunnel-Artefakt).">ⓘ</span></label>
+      <label for="speed"><span data-i18n="lb_speed">Sim. Geschwindigkeit</span> <span class="info" tabindex="0" role="button" aria-label="Information über Simulationsgeschwindigkeit" data-title="Geschwindigkeit" data-i18n-tip="tip_speed" data-tip="Zeit-Raffung, frei wählbar. Bei höherem Wert fallen alle Kugeln deutlich schneller, die Physik bleibt dank fixem Substep identisch (kein Tunnel-Artefakt).">ⓘ</span></label>
       <input class="input" id="speed" type="number"  step="0.25" value="1" inputmode="decimal">
-      <span class="hint">Default: 1×</span>
+      <span class="hint" data-i18n="hint_d_speed">Default: 1×</span>
     </div>
     <div class="field">
-      <label for="interval">Abwurf-Intervall (ms) <span class="info" tabindex="0" role="button" aria-label="Information über Abwurf-Intervall" data-title="Abwurf-Intervall" data-tip="Zeit zwischen den einzelnen Kugeln, frei wählbar (ms). Kürzeres Intervall = kräftigerer Schwall, längeres = ruhigeres, einzeln beobachtbares Fallen.">ⓘ</span></label>
+      <label for="interval"><span data-i18n="lb_interval">Abwurf-Intervall (ms)</span> <span class="info" tabindex="0" role="button" aria-label="Information über Abwurf-Intervall" data-title="Abwurf-Intervall" data-i18n-tip="tip_interval" data-tip="Zeit zwischen den einzelnen Kugeln, frei wählbar (ms). Kürzeres Intervall = kräftigerer Schwall, längeres = ruhigeres, einzeln beobachtbares Fallen.">ⓘ</span></label>
       <input class="input" id="interval" type="number"  step="1" value="38" inputmode="numeric">
-      <span class="hint">Default: 38 ms</span>
+      <span class="hint" data-i18n="hint_d_int">Default: 38 ms</span>
     </div>
     <div class="field">
-      <label for="seed">Seed <span class="info" tabindex="0" role="button" aria-label="Information über Seed" data-title="Seed" data-tip="Saat für die minimale, deterministische Abwurf-Ungenauigkeit, frei wählbar. Klassische Stochastik-Betrachtung: Die Verteilung selbst entsteht aus der physikalischen Chaotik der Stöße, nicht aus einem Zufallsgenerator.">ⓘ</span></label>
+      <label for="seed"><span data-i18n="lb_seed">Seed</span> <span class="info" tabindex="0" role="button" aria-label="Information über Seed" data-title="Seed" data-i18n-tip="tip_seed" data-tip="Saat für die minimale, deterministische Abwurf-Ungenauigkeit, frei wählbar. Klassische Stochastik-Betrachtung: Die Verteilung selbst entsteht aus der physikalischen Chaotik der Stöße, nicht aus einem Zufallsgenerator.">ⓘ</span></label>
       <input class="input" id="seed" type="number"  step="1" value="42" inputmode="numeric">
-      <span class="hint">Default: 42</span>
+      <span class="hint" data-i18n="hint_d_seed">Default: 42</span>
     </div>
     <div class="field">
-      <label for="sound">Kollisions-Sound <span class="info" tabindex="0" role="button" aria-label="Information über Sound" data-title="Kollisions-Sound" data-tip="Realistische Klacker-Geräusche bei Peg- und Wandstößen (WebAudio, komplett offline, ohne Samples). Deaktivierbar. Erster Start muss einmal geklickt/angetippt werden (Browser-Autoplay-Regel).">ⓘ</span></label>
+      <label for="sound"><span data-i18n="lb_sound">Kollisions-Sound</span> <span class="info" tabindex="0" role="button" aria-label="Information über Sound" data-title="Kollisions-Sound" data-i18n-tip="tip_sound" data-tip="Realistische Klacker-Geräusche bei Peg- und Wandstößen (WebAudio, komplett offline, ohne Samples). Deaktivierbar. Erster Start muss einmal geklickt/angetippt werden (Browser-Autoplay-Regel).">ⓘ</span></label>
       <input class="input" id="sound" type="checkbox" checked>
-      <span class="hint">Default: an</span>
+      <span class="hint" data-i18n="hint_d_sound">Default: an</span>
     </div>
   </div>
   <div class="btns">
-    <button class="btn" id="btnStart" type="button"><b>▶</b> Start</button>
-    <button class="btn secondary" id="btnPause" type="button" disabled><b>⏸</b> Pause</button>
-    <button class="btn ghost" id="btnReset" type="button"><b>↺</b> Reset</button>
+    <button class="btn" id="btnStart" type="button" data-i18n="btn_start"><b>▶</b> Start</button>
+    <button class="btn secondary" id="btnPause" type="button" disabled data-i18n="btn_pause"><b>⏸</b> Pause</button>
+    <button class="btn ghost" id="btnReset" type="button" data-i18n="btn_reset"><b>↺</b> Reset</button>
   </div>
-  <p class="hint" style="margin-top:10px">Tipp: <b>Leertaste</b> pausiert/startet die Animation (außerhalb von Eingabefeldern)</p>
+  <p class="hint" style="margin-top:10px" data-i18n="hint_toggle">Tip: <b>Spacebar</b> pausiert/startet die Animation (außerhalb von Eingabefeldern)</p>
 </section>
 
 <!-- ============ 02 BOARD & HISTOGRAMM ============ -->
 <section class="card board-card" aria-labelledby="h-board">
-  <h2 id="h-board"><span class="no">02</span>Das Brett</h2>
+  <h2 id="h-board" data-i18n="h_board"><span class="no">02</span>Das Brett</h2>
   <div class="boardFrame"><canvas id="board" aria-label="Galton-Board-Simulation"></canvas></div>
   <div class="histWrap">
     <canvas id="hist" aria-label="Live-Histogramm der Kugelverteilung"></canvas>
     <div class="histLegend">
-      <span><span class="sw" style="background:linear-gradient(90deg,#8a6d1f,#f2d68f)"></span> Fächerhäufigkeit (live)</span>
-      <span><span class="sw" style="background:#e8c37a;opacity:.8"></span> Normalverteilung (aus den Daten)</span>
-      <span id="histNote">Noch keine Kugeln abgeworfen.</span>
+      <span><span class="sw" style="background:linear-gradient(90deg,#8a6d1f,#f2d68f)"></span><span data-i18n="legend_freq">Fächerhäufigkeit (live)</span></span>
+      <span><span class="sw" style="background:#e8c37a;opacity:.8"></span><span data-i18n="legend_normal">Normalverteilung (aus den Daten)</span></span>
+      <span id="histNote" data-i18n="hist_note">Noch keine Kugeln abgeworfen.</span>
     </div>
   </div>
   <div class="stats" id="stats">
-    <div class="stat"><div class="k">Kugeln gesamt</div><div class="v" id="stTotal">0</div><div class="d" id="stTotalD">von 300</div></div>
-    <div class="stat"><div class="k">Mittelwert x̄</div><div class="v" id="stMean">—</div><div class="d">theoretisch μ = 6.0</div></div>
-    <div class="stat"><div class="k">Std.-Abw. σ</div><div class="v" id="stSigma">—</div><div class="d">theoretisch σ = 1.73</div></div>
-    <div class="stat"><div class="k">Modus (Häufigstes Fach)</div><div class="v" id="stMode">—</div><div class="d">—</div></div>
+    <div class="stat"><div class="k" data-i18n="stat_total">Kugeln gesamt</div><div class="v" id="stTotal">0</div><div class="d" id="stTotalD" data-i18n="stat_total_d">von 300</div></div>
+    <div class="stat"><div class="k" data-i18n="stat_mean">Mittelwert x̄</div><div class="v" id="stMean">—</div><div class="d" data-i18n="stat_mean_d">theoretisch μ = 6.0</div></div>
+    <div class="stat"><div class="k" data-i18n="stat_sigma">Std.-Abw. σ</div><div class="v" id="stSigma">—</div><div class="d" data-i18n="stat_sigma_d">theoretisch σ = 1.73</div></div>
+    <div class="stat"><div class="k" data-i18n="stat_mode">Modus (Häufigstes Fach)</div><div class="v" id="stMode">—</div><div class="d">—</div></div>
   </div>
 </section>
 
 <!-- ============ 03 RECHNER ============ -->
 <section class="card" aria-labelledby="h-calc">
-  <h2 id="h-calc"><span class="no">03</span>Wahrscheinlichkeits-Rechner (berechnet in Echtzeit)</h2>
-  <p class="lead">Gib Parameter der Binomialverteilung ein &ndash; alle Ergebnisse erscheinen sofort beim Tippen. Die theoretischen Werte entsprechen exakt dem, was dein Galton-Board näherungsweise erzeugt.</p>
+  <h2 id="h-calc" data-i18n="h_calc"><span class="no">03</span>Wahrscheinlichkeits-Rechner (berechnet in Echtzeit)</h2>
+  <p class="lead" data-i18n="lead_calc">Gib Parameter der Binomialverteilung ein &ndash; alle Ergebnisse erscheinen sofort beim Tippen. Die theoretischen Werte entsprechen exakt dem, was dein Galton-Board näherungsweise erzeugt.</p>
   <div class="grid">
     <div class="field">
-      <label for="calcN">n (Münzwürfe / Ebenen) <span class="info" tabindex="0" role="button" aria-label="Information über n" data-title="n – Anzahl Versuche" data-tip="Zahl der Bernoulli-Experimente (Peg-Ebenen). Beim Galton Board entspricht n der Anzahl der Nagelreihen, die eine Kugel passiert. Frei wählbar.">ⓘ</span></label>
+      <label for="calcN"><span data-i18n="lb_calcN">n (Münzwürfe / Ebenen)</span> <span class="info" tabindex="0" role="button" aria-label="Information über n" data-title="n – Anzahl Versuche" data-i18n-tip="tip_calcN" data-tip="Zahl der Bernoulli-Experimente (Peg-Ebenen). Beim Galton Board entspricht n der Anzahl der Nagelreihen, die eine Kugel passiert. Frei wählbar.">ⓘ</span></label>
       <input class="input" id="calcN" type="number"  step="1" value="12" inputmode="numeric">
     </div>
     <div class="field">
-      <label for="calcP">p (Wahrscheinlichkeit) <span class="info" tabindex="0" role="button" aria-label="Information über p" data-title="p – Erfolgswahrscheinlichkeit" data-tip="Wahrscheinlichkeit für &quot;rechts&quot; an einem einzelnen Nagel. Frei wählbar 0–1. Beim symmetrischen Brett gilt p = 0.5; ein schräges Brett verschiebt die Kurve.">ⓘ</span></label>
+      <label for="calcP"><span data-i18n="lb_calcP">p (Wahrscheinlichkeit)</span> <span class="info" tabindex="0" role="button" aria-label="Information über p" data-title="p – Erfolgswahrscheinlichkeit" data-i18n-tip="tip_calcP" data-tip="Wahrscheinlichkeit für &quot;rechts&quot; an einem einzelnen Nagel. Frei wählbar 0–1. Beim symmetrischen Brett gilt p = 0.5; ein schräges Brett verschiebt die Kurve.">ⓘ</span></label>
       <input class="input" id="calcP" type="number"  step="0.01" value="0.5" inputmode="decimal">
     </div>
     <div class="field">
-      <label for="calcK">k (Trefferzahl / Fach) <span class="info" tabindex="0" role="button" aria-label="Information über k" data-title="k – Treffer" data-tip="Anzahl der &quot;Rechts&quot;-Entscheidungen = Fach-Nummer. Frei wählbar (intern auf 0…n begrenzt).">ⓘ</span></label>
+      <label for="calcK"><span data-i18n="lb_calcK">k (Trefferzahl / Fach)</span> <span class="info" tabindex="0" role="button" aria-label="Information über k" data-title="k – Treffer" data-i18n-tip="tip_calcK" data-tip="Anzahl der &quot;Rechts&quot;-Entscheidungen = Fach-Nummer. Frei wählbar (intern auf 0…n begrenzt).">ⓘ</span></label>
       <input class="input" id="calcK" type="number"  step="1" value="6" inputmode="numeric">
     </div>
   </div>
   <div class="calc-out">
-    <div class="out"><div class="k">C(n, k) Binomialkoeffizient</div><div class="v" id="oComb">—</div></div>
-    <div class="out"><div class="k">P(X = k) exakt</div><div class="v" id="oExact">—</div></div>
-    <div class="out"><div class="k">P(X ≤ k) kumulativ</div><div class="v" id="oCum">—</div></div>
-    <div class="out"><div class="k">Erwartungswert μ = n·p</div><div class="v" id="oMean">—</div></div>
-    <div class="out"><div class="k">Varianz σ² = n·p·(1−p)</div><div class="v" id="oVar">—</div></div>
-    <div class="out"><div class="k">Std.-Abw. σ</div><div class="v" id="oSigma">—</div></div>
-    <div class="out"><div class="k">z-Score ((k − μ)/σ)</div><div class="v" id="oZ">—</div></div>
-    <div class="out"><div class="k">Normalnäherung φ(z)</div><div class="v" id="oPhi">—</div></div>
+    <div class="out"><div class="k" data-i18n="out_comb">C(n, k) Binomialkoeffizient</div><div class="v" id="oComb">—</div></div>
+    <div class="out"><div class="k" data-i18n="out_exact">P(X = k) exakt</div><div class="v" id="oExact">—</div></div>
+    <div class="out"><div class="k" data-i18n="out_cum">P(X ≤ k) kumulativ</div><div class="v" id="oCum">—</div></div>
+    <div class="out"><div class="k" data-i18n="out_mean">Erwartungswert μ = n·p</div><div class="v" id="oMean">—</div></div>
+    <div class="out"><div class="k" data-i18n="out_var">Varianz σ² = n·p·(1−p)</div><div class="v" id="oVar">—</div></div>
+    <div class="out"><div class="k" data-i18n="out_sigma">Std.-Abw. σ</div><div class="v" id="oSigma">—</div></div>
+    <div class="out"><div class="k" data-i18n="out_z">z-Score ((k − μ)/σ)</div><div class="v" id="oZ">—</div></div>
+    <div class="out"><div class="k" data-i18n="out_phi">Normalnäherung φ(z)</div><div class="v" id="oPhi">—</div></div>
   </div>
   <div class="divider"></div>
-  <h3 style="font-family:var(--font-head);color:var(--gold);font-size:.98rem;margin-bottom:6px">Pascal&rsquo;sches Dreieck (n = 0 … min(n, 14))</h3>
-  <p class="hint" style="font-size:.72rem;color:var(--muted);margin-bottom:8px">Die Kugelanzahl pro Fach entspricht (skaliert) den Zahlen dieser Zeile. Markierte Zelle = C(n, k) deiner Rechner-Eingabe.</p>
+  <h3 style="font-family:var(--font-head);color:var(--gold);font-size:.98rem;margin-bottom:6px" data-i18n="pasc_heading">Pascal&rsquo;sches Dreieck (n = 0 … min(n, 14))</h3>
+  <p class="hint" style="font-size:.72rem;color:var(--muted);margin-bottom:8px" data-i18n="pasc_hint">The ball count per bin entspricht (skaliert) den Zahlen dieser Zeile. Markierte Zelle = C(n, k) deiner Rechner-Eingabe.</p>
   <div style="overflow-x:auto"><table class="pascal" id="pascTable" aria-label="Pascal'sches Dreieck"></table></div>
 </section>
 
 <!-- ============ 04 THEORIE ============ -->
 <section class="card" aria-labelledby="h-theory">
-  <h2 id="h-theory"><span class="no">04</span>Die Mathematik hinter dem Galton Board</h2>
-  <p class="lead">Warum entsteht aus einem Brett mit Nägeln eine Glockenkurve? Die Antwort führt Schritt für Schritt von einem simplen Münzwurf bis zum Zentralen Grenzwertsatz.</p>
+  <h2 id="h-theory" data-i18n="h_theory"><span class="no">04</span>Die Mathematik hinter dem Galton Board</h2>
+  <p class="lead" data-i18n="lead_theory">Warum entsteht aus einem Brett mit Nägeln eine Glockenkurve? Die Antwort führt Schritt für Schritt von einem simplen Münzwurf bis zum Zentralen Grenzwertsatz.</p>
   <div class="prose">
 
-    <h3><span class="step">04.1</span>Das Bernoulli-Experiment</h3>
-    <p>Jeder einzelne Nagel im Galton Board ist ein <b>Zufallsexperiment mit zwei Ausgängen</b>: Trifft die Kugel einen Nagel, weicht sie entweder nach <b>links</b> oder nach <b>rechts</b> ab. Bei einem perfekt symmetrischen Brett sind beide Möglichkeiten gleich wahrscheinlich. Solche Experimente heißen nach Jakob Bernoulli <b>Bernoulli-Experimente</b>; die klassische Notation ist</p>
+    <h3 data-i18n="s041"><span class="step">04.1</span>Das Bernoulli-Experiment</h3>
+    <p data-i18n="p041a">Jeder einzelne Nagel im Galton Board ist ein <b>Zufallsexperiment mit zwei Ausgängen</b>: Trifft die Kugel einen Nagel, weicht sie entweder nach <b>links</b> oder nach <b>rechts</b> ab. Bei einem perfekt symmetrischen Brett sind beide Möglichkeiten gleich wahrscheinlich. Solche Experimente heißen nach Jakob Bernoulli <b>Bernoulli-Experimente</b>; die klassische Notation ist</p>
     <div class="formula">P(„rechts&ldquo;) = p&nbsp;&nbsp;und&nbsp;&nbsp;P(„links&ldquo;) = 1 − p&nbsp;&nbsp;mit&nbsp;&nbsp;p = 0.5</div>
-    <p>Die Kugel durchläuft genau <var>n</var> solcher Entscheidungen &ndash; eine pro Nagelreihe. Ihre Position im Fach <var>k</var> entspricht daher der Anzahl der Rechts-Abweichungen unter <var>n</var> unabhängigen Versuchen.</p>
+    <p data-i18n="p041b">Die Kugel durchläuft genau <var>n</var> solcher Entscheidungen &ndash; eine pro Nagelreihe. Ihre Position im Fach <var>k</var> entspricht daher der Anzahl der Rechts-Abweichungen unter <var>n</var> unabhängigen Versuchen.</p>
 
-    <h3><span class="step">04.2</span>Die Binomialverteilung</h3>
-    <p>Die Zufallsvariable X = „Anzahl der Rechts-Abweichungen&ldquo; ist <b>binomialverteilt</b>: X ~ B(n, p). Die Wahrscheinlichkeit, genau <var>k</var>-mal rechts abzuweichen, ist</p>
+    <h3 data-i18n="s042"><span class="step">04.2</span>Die Binomialverteilung</h3>
+    <p data-i18n="p042a">Die Zufallsvariable X = „Anzahl der Rechts-Abweichungen&ldquo; ist <b>binomialverteilt</b>: X ~ B(n, p). Die Wahrscheinlichkeit, genau <var>k</var>-mal rechts abzuweichen, ist</p>
     <div class="formula">
       P(X = k) = <span class="frac"><span>n</span><span>k</span></span> · p<sup>k</sup> · (1 − p)<sup>n−k</sup>
     </div>
-    <p>Jeder einzelne Pfad durch das Brett hat die Wahrscheinlichkeit p<sup>k</sup>(1−p)<sup>n−k</sup> &ndash; identisch für alle Pfade mit gleicher Rechts-Anzahl. Der <b>Binomialkoeffizient</b> C(n, k) zählt, wie viele verschiedene Pfade in dasselbe Fach führen. Mit p = 0.5 vereinfacht sich die Formel zu</p>
+    <p data-i18n="p042b">Jeder einzelne Pfad durch das Brett hat die Wahrscheinlichkeit p<sup>k</sup>(1−p)<sup>n−k</sup> &ndash; identisch für alle Pfade mit gleicher Rechts-Anzahl. Der <b>Binomialkoeffizient</b> C(n, k) zählt, wie viele verschiedene Pfade in dasselbe Fach führen. Mit p = 0.5 vereinfacht sich die Formel zu</p>
     <div class="formula">
       P(X = k) = <span class="frac"><span>n</span><span>k</span></span> · <span class="frac"><span>1</span><span>2<sup>n</sup></span></span>
     </div>
-    <p class="note"><b>Kernaussage:</b> Das Galton Board ist ein <b>Analogrechner für Binomialkoeffizienten</b> &ndash; die Höhe des Kugelstapels im Fach <var>k</var> ist proportional zu C(n, k).</p>
+    <p class="note" data-i18n="note042"><b>Key insight:</b> Das Galton Board ist ein <b>Analogrechner für Binomialkoeffizienten</b> &ndash; die Höhe des Kugelstapels im Fach <var>k</var> ist proportional zu C(n, k).</p>
 
-    <h3><span class="step">04.3</span>Das Pascal&rsquo;sche Dreieck</h3>
-    <p>Die Binomialkoeffizienten lassen sich mit der Rekursion C(n, k) = C(n−1, k−1) + C(n−1, k) zeilenweise aufbauen &ndash; genau das tut das <b>Pascal&rsquo;sche Dreieck</b>. Liest man eine Zeile des Dreiecks als Fachhöhen, hat man exakt das Ergebnis eines idealen Galton Boards vor Augen:</p>
+    <h3 data-i18n="s043"><span class="step">04.3</span>Das Pascal&rsquo;sche Dreieck</h3>
+    <p data-i18n="p043a">Die Binomialkoeffizienten lassen sich mit der Rekursion C(n, k) = C(n−1, k−1) + C(n−1, k) zeilenweise aufbauen &ndash; genau das tut das <b>Pascal&rsquo;sche Dreieck</b>. Liest man eine Zeile des Dreiecks als Fachhöhen, hat man exakt das Ergebnis eines idealen Galton Boards vor Augen:</p>
     <div class="formula">1&nbsp;&nbsp;6&nbsp;&nbsp;15&nbsp;&nbsp;20&nbsp;&nbsp;15&nbsp;&nbsp;6&nbsp;&nbsp;1&nbsp;&nbsp;<span style="color:var(--cream-dim)">← Zeile n = 6, Summe 2<sup>6</sup> = 64</span></div>
-    <p>Die Summe jeder Zeile beträgt 2<sup>n</sup> &ndash; die Gesamtzahl aller möglichen Pfade. Wichtig für das Brett: Die Koeffizienten sind symmetrisch (C(n, k) = C(n, n−k)); deshalb ist die Verteilung perfekt symmetrisch um die Mitte.</p>
+    <p data-i18n="p043b">Die Summe jeder Zeile beträgt 2<sup>n</sup> &ndash; die Gesamtzahl aller möglichen Pfade. Wichtig für das Brett: Die Koeffizienten sind symmetrisch (C(n, k) = C(n, n−k)); deshalb ist die Verteilung perfekt symmetrisch um die Mitte.</p>
 
-    <h3><span class="step">04.4</span>Vom Binomial zur Normalverteilung (De Moivre &amp; Laplace)</h3>
-    <p>Abraham de Moivre zeigte 1733, dass die Binomialverteilung für wachsendes <var>n</var> gegen die <b>Glockenkurve</b> strebt; Pierre-Simon Laplace verallgemeinerte das 1812 zum <b>De-Moivre-Laplace-Theorem</b> &ndash; dem ersten Spezialfall des Zentralen Grenzwertsatzes:</p>
+    <h3 data-i18n="s044"><span class="step">04.4</span>Vom Binomial zur Normalverteilung (De Moivre &amp; Laplace)</h3>
+    <p data-i18n="p044a">Abraham de Moivre zeigte 1733, dass die Binomialverteilung für wachsendes <var>n</var> gegen die <b>Glockenkurve</b> strebt; Pierre-Simon Laplace verallgemeinerte das 1812 zum <b>De-Moivre-Laplace-Theorem</b> &ndash; dem ersten Spezialfall des Zentralen Grenzwertsatzes:</p>
     <div class="formula">
       <span class="frac"><span>n</span><span>k</span></span> p<sup>k</sup>(1−p)<sup>n−k</sup> ≈ <span class="frac"><span>1</span><span>σ√(2π)</span></span> · exp(−<span class="frac"><span>(k − μ)<sup>2</sup></span><span>2σ<sup>2</sup></span></span>)
     </div>
-    <p>mit Mittelwert μ = n·p und Standardabweichung σ = √(n·p·(1−p)). Schon bei <var>n</var> = 12 Pegreihen ist die Annäherung für die Praxis ausgezeichnet &ndash; erkennbar am roten Kurven-Overlay über dem Histogramm.</p>
+    <p data-i18n="p044b">with mean μ = n·p and standard deviation σ = √(n·p·(1−p)). Schon bei <var>n</var> = 12 Pegreihen ist die Annäherung für die Praxis ausgezeichnet &ndash; erkennbar am roten Kurven-Overlay über dem Histogramm.</p>
 
-    <h3><span class="step">04.5</span>Zentraler Grenzwertsatz &amp; der „analoge Computer&ldquo;</h3>
-    <p>Der <b>Zentrale Grenzwertsatz</b> (CLT) besagt: Die Summe vieler unabhängiger, gleichverteilter Zufallseffekte ist annähernd normalverteilt &ndash; unabhängig von der Form der Einzeleffekte. Die Weglänge einer Kugel ist die Summe von <var>n</var> Einzelentscheidungen (±1 je Abweichung), also gilt der CLT direkt. Das Brett macht diese Mathematik <b>physikalisch sichtbar</b>, ohne dass ein Computer rechnet. Wichtig ist die ehrliche Einschränkung: Reale Bretter sind nie perfekt symmetrisch (jeder Nagel hat ein kleines, individuelles p ≠ 0.5), und die Kugeln stoßen sich gegenseitig &ndash; deshalb bleiben Messung und Theorie näherungsweise, aber nicht exakt gleich.</p>
+    <h3 data-i18n="s045"><span class="step">04.5</span>Zentraler Grenzwertsatz &amp; der „analoge Computer&ldquo;</h3>
+    <p data-i18n="p045a">Der <b>Zentrale Grenzwertsatz</b> (CLT) besagt: Die Summe vieler unabhängiger, gleichverteilter Zufallseffekte ist annähernd normalverteilt &ndash; unabhängig von der Form der Einzeleffekte. Die Weglänge einer Kugel ist die Summe von <var>n</var> Einzelentscheidungen (±1 je Abweichung), also gilt der CLT direkt. Das Brett macht diese Mathematik <b>physikalisch sichtbar</b>, ohne dass ein Computer rechnet. Wichtig ist die ehrliche Einschränkung: Reale Bretter sind nie perfekt symmetrisch (jeder Nagel hat ein kleines, individuelles p ≠ 0.5), und die Kugeln stoßen sich gegenseitig &ndash; deshalb bleiben Messung und Theorie näherungsweise, aber nicht exakt gleich.</p>
 
   </div>
 </section>
 
 <!-- ============ 05 HISTORIE ============ -->
 <section class="card" aria-labelledby="h-history">
-  <h2 id="h-history"><span class="no">05</span>Historie: Francis Galton und das Quincunx</h2>
-  <p class="lead">Das Galton Board ist eines der ältesten statistischen Demonstrationsgeräte der Welt &ndash; und seine Entstehungsgeschichte ist faszinierend und kritisch zu betrachten zugleich.</p>
+  <h2 id="h-history" data-i18n="h_history"><span class="no">05</span>Historie: Francis Galton und das Quincunx</h2>
+  <p class="lead" data-i18n="lead_history">Das Galton Board ist eines der ältesten statistischen Demonstrationsgeräte der Welt &ndash; und seine Entstehungsgeschichte ist faszinierend und kritisch zu betrachten zugleich.</p>
   <div class="prose">
 
-    <h3><span class="step">05.1</span>Francis Galton (1822–1911)</h3>
-    <p>Francis Galton, ein englischer Universalgelehrter und Cousin Charles Darwins, gilt als einer der Begründer der modernen Statistik. Er prägte fundamentale Konzepte, die bis heute in jeder Statistik-Vorlesung auftauchen: die <b>Korrelation</b>, die <b>Regressionsanalyse</b>, den Begriff <b>„Natur gegen Umwelt&ldquo;</b> (nature vs. nurture) und systematische Methoden zur Messung menschlicher Merkmale. Seine Datenarbeit (z. B. zu Erbsengrößen, Fingerabdrücken und Körpergrößen von Eltern und Kindern) legte Grundsteine der Biometrie.</p>
+    <h3 data-i18n="s051"><span class="step">05.1</span>Francis Galton (1822–1911)</h3>
+    <p data-i18n="p051a">Francis Galton, ein englischer Universalgelehrter und Cousin Charles Darwins, gilt als einer der Begründer der modernen Statistik. Er prägte fundamentale Konzepte, die bis heute in jeder Statistik-Vorlesung auftauchen: die <b>Korrelation</b>, die <b>Regressionsanalyse</b>, den Begriff <b>„Natur gegen Umwelt&ldquo;</b> (nature vs. nurture) und systematische Methoden zur Messung menschlicher Merkmale. Seine Datenarbeit (z. B. zu Erbsengrößen, Fingerabdrücken und Körpergrößen von Eltern und Kindern) legte Grundsteine der Biometrie.</p>
 
-    <h3><span class="step">05.2</span>Das Quincunx – die Geburt des Bretts</h3>
-    <p>Um 1873 führte Galton in Vorlesungen ein Gerät vor, das er <b>Quincunx</b> nannte &ndash; benannt nach dem lateinischen Wort für die Fünfer-Anordnung auf einem Würfel (quincunx = fünf), da die Nagel-Anordnung an die 5-Punkte-Fläche eines Spielwürfels erinnert. In seinem Buch <i>Natural Inheritance</i> (1889) beschrieb er das Gerät ausführlich. Sein Ziel war es, anschaulich zu zeigen, wie aus vielen kleinen, unabhängigen Einflüssen eine glockenförmige Verteilung, das <b>„Gesetz der Fehler&ldquo;</b> (law of error, heute Normalverteilung), entsteht &ndash; und wie dieses Gesetz seine berühmte Beobachtung der <b>Regression zur Mitte</b> (regression to mediocrity) erklärt.</p>
+    <h3 data-i18n="s052"><span class="step">05.2</span>Das Quincunx – die Geburt des Bretts</h3>
+    <p data-i18n="p052a">Um 1873 führte Galton in Vorlesungen ein Gerät vor, das er <b>Quincunx</b> nannte &ndash; benannt nach dem lateinischen Wort für die Fünfer-Anordnung auf einem Würfel (quincunx = fünf), da die Nagel-Anordnung an die 5-Punkte-Fläche eines Spielwürfels erinnert. In seinem Buch <i>Natural Inheritance</i> (1889) beschrieb er das Gerät ausführlich. Sein Ziel war es, anschaulich zu zeigen, wie aus vielen kleinen, unabhängigen Einflüssen eine glockenförmige Verteilung, das <b>„Gesetz der Fehler&ldquo;</b> (law of error, heute Normalverteilung), entsteht &ndash; und wie dieses Gesetz seine berühmte Beobachtung der <b>Regression zur Mitte</b> (regression to mediocrity) erklärt.</p>
 
-    <h3><span class="step">05.3</span>Die Verbreitung</h3>
+    <h3 data-i18n="s053"><span class="step">05.3</span>Die Verbreitung</h3>
     <ul>
-      <li>Ende des 19. Jahrhunderts wurde das Quincunx zum Standard-Demonstrationsgerät in der Statistik-Lehre (u. a. durch Karl Pearson, der Galtons Statistiken mathematisch formalisierte).</li>
-      <li>Im englischen Sprachraum heißt das Gerät bis heute <b>Galton Board</b> oder <b>Bean Machine</b> („Bohnen-Maschine&ldquo;), weil früher Bohnen statt Kugeln verwendet wurden.</li>
-      <li>Moderne Lehrmittel nutzen das Prinzip weiter: als diskretes Galton Board in Statistik-Apps, aber auch als physikalisches Exponat in Science-Centern weltweit.</li>
+      <li data-i18n="li053a">Ende des 19. Jahrhunderts wurde das Quincunx zum Standard-Demonstrationsgerät in der Statistik-Lehre (u. a. durch Karl Pearson, der Galtons Statistiken mathematisch formalisierte).</li>
+      <li data-i18n="li053b">Im englischen Sprachraum heißt das Gerät bis heute <b>Galton Board</b> oder <b>Bean Machine</b> („Bohnen-Maschine&ldquo;), weil früher Bohnen statt Kugeln verwendet wurden.</li>
+      <li data-i18n="li053c">Moderne Lehrmittel nutzen das Prinzip weiter: als diskretes Galton Board in Statistik-Apps, aber auch als physikalisches Exponat in Science-Centern weltweit.</li>
     </ul>
 
-    <div class="warn">
-      <b>Kritische Einordnung &ndash; zwingend notwendig:</b> Galton war ein überzeugter Verfechter der <b>Eugenik</b>, also der Idee, die menschliche Fortpflanzung zu „verbessern&ldquo;, und beeinflusste damit Ideologien, die im 20. Jahrhundert zu Zwangssterilisierungen und Verbrechen führten. Seine statistischen Werkzeuge sind wissenschaftliche Errungenschaften &ndash; seine sozialen Forderungen sind es nicht und werden von der modernen Wissenschaft und Gesellschaft klar abgelehnt. Das Galton Board selbst ist ein neutrales Lehrmittel: Es zeigt Mathematik, keine Werturteile. Diese Trennung von wissenschaftlichem Werk und persönlicher Ideologie des Erfinders ist für eine ehrliche Betrachtung unerlässlich.
+    <div class="warn" data-i18n="warn051">
+      <b>Key insight &ndash; required reading:</b> Galton war ein überzeugter Verfechter der <b>Eugenik</b>, also der Idee, die menschliche Fortpflanzung zu „verbessern&ldquo;, und beeinflusste damit Ideologien, die im 20. Jahrhundert zu Zwangssterilisierungen und Verbrechen führten. Seine statistischen Werkzeuge sind wissenschaftliche Errungenschaften &ndash; seine sozialen Forderungen sind es nicht und werden von der modernen Wissenschaft und Gesellschaft klar abgelehnt. Das Galton Board selbst ist ein neutrales Lehrmittel: Es zeigt Mathematik, keine Werturteile. Diese Trennung von wissenschaftlichem Werk und persönlicher Ideologie des Erfinders ist für eine ehrliche Betrachtung unerlässlich.
     </div>
 
-    <p class="cite">Quellen: Galton, F. (1889) <i>Natural Inheritance</i>; Stigler, S. M. (1986) <i>The History of Statistics</i>, Harvard Univ. Press; Freedman, Pisani, Purves (2007) <i>Statistics</i>, 4. Aufl.; Gould, S. J. (1981) <i>The Mismeasure of Man</i> (kritische Aufarbeitung). Zugegriffen August 2026.</p>
+    <p class="cite" data-i18n="cite051">Sources: Galton, F. (1889) <i>Natural Inheritance</i>; Stigler, S. M. (1986) <i>The History of Statistics</i>, Harvard Univ. Press; Freedman, Pisani, Purves (2007) <i>Statistics</i>, 4. Aufl.; Gould, S. J. (1981) <i>The Mismeasure of Man</i> (kritische Aufarbeitung). Zugegriffen August 2026.</p>
 
   </div>
 </section>
 
 <!-- ============ 06 ANWENDUNGEN ============ -->
 <section class="card" aria-labelledby="h-apps">
-  <h2 id="h-apps"><span class="no">06</span>Anwendungsfelder in der Realität</h2>
-  <p class="lead">Das Galton-Prinzip &ndash; viele kleine unabhängige Effekte ergeben eine Glockenkurve &ndash; steckt in überraschend vielen Disziplinen. Hier die wichtigsten &ndash; ehrlich bewertet, inklusive der Grenzen.</p>
+  <h2 id="h-apps" data-i18n="h_apps"><span class="no">06</span>Anwendungsfelder in der Realität</h2>
+  <p class="lead" data-i18n="lead_apps">The Galton principle &ndash; viele kleine unabhängige Effekte ergeben eine Glockenkurve &ndash; steckt in überraschend vielen Disziplinen. Hier die wichtigsten &ndash; ehrlich bewertet, inklusive der Grenzen.</p>
   <div class="grid2">
 
     <article class="app">
-      <h4>🏭 Qualitätsmanagement &amp; Six Sigma</h4>
-      <p>Jede Fertigungslinie unterliegt zufälligen Schwankungen (Material, Maschine, Mensch). Shewhart-Regelkarten (1924) und die Six-Sigma-Methodik nutzen die Glockenkurve, um zwischen „normaler&ldquo; Streuung und echten Störungen zu unterscheiden. Die Prozessfähigkeit Cpk vergleicht die Lage der Kurve mit den Toleranzgrenzen.</p>
-      <span class="key">Kernerkenntnis: Variation ist inhärent &ndash; Statistik trennt Zufall von Systemfehler.</span>
+      <h4 data-i18n="app_qm_head">🏭 Qualitätsmanagement &amp; Six Sigma</h4>
+      <p data-i18n="app_qm_p">Jede Fertigungslinie unterliegt zufälligen Schwankungen (Material, Maschine, Mensch). Shewhart-Regelkarten (1924) und die Six-Sigma-Methodik nutzen die Glockenkurve, um zwischen „normaler&ldquo; Streuung und echten Störungen zu unterscheiden. Die Prozessfähigkeit Cpk vergleicht die Lage der Kurve mit den Toleranzgrenzen.</p>
+      <span class="key" data-i18n="app_qm_key">Kernerkenntnis: Variation ist inhärent &ndash; Statistik trennt Zufall von Systemfehler.</span>
     </article>
 
     <article class="app">
-      <h4>📈 Finanzmärkte: Random Walk &amp; Optionen</h4>
-      <p>Louis Bachelier beschrieb 1900 in <i>Théorie de la spéculation</i> Kurse als Summe vieler kleiner Schritte &ndash; das mathematische Galton Board der Finanzwelt. Darauf beruhen die Brownsche-Bewegungs-Modelle und die Black-Scholes-Formel (1973).</p>
-      <span class="key">Kernerkenntnis: Kursbewegungen ähneln einer Glockenkurve &ndash; aber reale Märkte haben „dicke Ränder&rdquo; (Fat Tails) und Phasen gebündelter Volatilität. Modelle sind Näherungen, keine Wahrheiten.</span>
+      <h4 data-i18n="app_fin_head">📈 Finanzmärkte: Random Walk &amp; Optionen</h4>
+      <p data-i18n="app_fin_p">Louis Bachelier beschrieb 1900 in <i>Théorie de la spéculation</i> Kurse als Summe vieler kleiner Schritte &ndash; das mathematische Galton Board der Finanzwelt. Darauf beruhen die Brownsche-Bewegungs-Modelle und die Black-Scholes-Formel (1973).</p>
+      <span class="key" data-i18n="app_fin_key">Kernerkenntnis: Kursbewegungen ähneln einer Glockenkurve &ndash; aber reale Märkte haben „dicke Ränder&rdquo; (Fat Tails) und Phasen gebündelter Volatilität. Modelle sind Näherungen, keine Wahrheiten.</span>
     </article>
 
     <article class="app">
@@ -428,21 +437,21 @@ details.acc .body{padding:4px 16px 14px}
     </article>
 
     <article class="app">
-      <h4>🧬 Genetik &amp; Biologie</h4>
-      <p>Quantitative Merkmale wie Körpergröße entstehen aus der Summe vieler Gene plus Umwelteinflüssen &ndash; klassisch normalverteilt. Galtons ursprüngliche Motivation war genau diese Vererbungsfrage: Er beobachtete die „Regression zur Mitte&ldquo;, das Rückgleiten extremer Eltern-Werte zur Populationsmitte.</p>
-      <span class="key">Kernerkenntnis: Viele kleine, additive Effekte &rarr; Glockenkurve, selbst wenn jeder Einzeleffekt diskret ist.</span>
+      <h4 data-i18n="app_bio_head">🧬 Genetik &amp; Biologie</h4>
+      <p data-i18n="app_bio_p">Quantitative Merkmale wie Körpergröße entstehen aus der Summe vieler Gene plus Umwelteinflüssen &ndash; klassisch normalverteilt. Galtons ursprüngliche Motivation war genau diese Vererbungsfrage: Er beobachtete die „Regression zur Mitte&ldquo;, das Rückgleiten extremer Eltern-Werte zur Populationsmitte.</p>
+      <span class="key" data-i18n="app_bio_key">Kernerkenntnis: Viele kleine, additive Effekte &rarr; Glockenkurve, selbst wenn jeder Einzeleffekt diskret ist.</span>
     </article>
 
     <article class="app">
-      <h4>🧑‍🤝‍🧑 Sozial- &amp; Medizinwissenschaften</h4>
-      <p>Messfehler in Umfragen und Diagnostik lassen sich als Summe vieler kleiner Fehlerquellen modellieren. Das Konfidenzintervall des Stichprobenmittelwerts folgt direkt aus dem CLT &ndash; das Galton Board ist die beste intuitive Erklärung dafür, warum ein Mittelwert über 30 Beobachtungen „normal&ldquo; verteilt ist.</p>
-      <span class="key">Kernerkenntnis: Einkommen, Vermögen und Fähigkeiten sind NICHT normalverteilt (lognormal, Pareto) &ndash; den CLT nur anwenden, wo er fachlich begründet ist.</span>
+      <h4 data-i18n="app_soc_head">🧑‍🤝‍🧑 Sozial- &amp; Medizinwissenschaften</h4>
+      <p data-i18n="app_soc_p">Messfehler in Umfragen und Diagnostik lassen sich als Summe vieler kleiner Fehlerquellen modellieren. Das Konfidenzintervall des Stichprobenmittelwerts folgt direkt aus dem CLT &ndash; das Galton Board ist die beste intuitive Erklärung dafür, warum ein Mittelwert über 30 Beobachtungen „normal&ldquo; verteilt ist.</p>
+      <span class="key" data-i18n="app_soc_key">Kernerkenntnis: Einkommen, Vermögen und Fähigkeiten sind NICHT normalverteilt (lognormal, Pareto) &ndash; den CLT nur anwenden, wo er fachlich begründet ist.</span>
     </article>
 
     <article class="app">
-      <h4>🤖 Informatik &amp; KI: Bagging &amp; Random Forests</h4>
-      <p>Random Forests (Breiman 2001) trainieren hunderte „schwache&ldquo; Entscheidungsbäume auf zufälligen Stichproben und lassen sie abstimmen. Die Varianz-Reduktion durch Mitteln vieler Einzelmodelle ist statistisch exakt das Galton-Prinzip: Das kollektive Ergebnis ist stabiler als jedes einzelne.</p>
-      <span class="key">Kernerkenntnis: Mehr unabhängige Beobachter &rarr; glockenförmig schmaleres, verlässlicheres Ergebnis.</span>
+      <h4 data-i18n="app_cs_head">🤖 Informatik &amp; KI: Bagging &amp; Random Forests</h4>
+      <p data-i18n="app_cs_p">Random Forests (Breiman 2001) trainieren hunderte „schwache&ldquo; Entscheidungsbäume auf zufälligen Stichproben und lassen sie abstimmen. Die Varianz-Reduktion durch Mitteln vieler Einzelmodelle ist statistisch exakt das Galton-Prinzip: Das kollektive Ergebnis ist stabiler als jedes einzelne.</p>
+      <span class="key" data-i18n="app_cs_key">Kernerkenntnis: Mehr unabhängige Beobachter &rarr; glockenförmig schmaleres, verlässlicheres Ergebnis.</span>
     </article>
 
   </div>
@@ -450,37 +459,37 @@ details.acc .body{padding:4px 16px 14px}
 
 <!-- ============ 07 DOKUMENTATION & QUELLEN ============ -->
 <section class="card" aria-labelledby="h-doc">
-  <h2 id="h-doc"><span class="no">07</span>Technische Dokumentation &amp; Ressourcen</h2>
+  <h2 id="h-doc" data-i18n="h_doc"><span class="no">07</span>Technische Dokumentation &amp; Ressourcen</h2>
   <details class="acc" open>
-    <summary>Physik-Engine: Wie „real&ldquo; ist die Simulation?</summary>
+    <summary data-i18n="doc_sum1">Physik-Engine: Wie „real&ldquo; ist die Simulation?</summary>
     <div class="body prose">
       <ul>
-        <li><b>Fixer Timestep:</b> Die Welt wird mit 120 Hz in Sub-Schritten berechnet, unabhängig von der Bildrate. Das verhindert „Tunneln&ldquo; durch Nägel auch bei 3×-Geschwindigkeit.</li>
-        <li><b>Teilelastische Stöße:</b> Restitution (Default 0.62) bestimmt den Energieverlust an Pegs; Wände (0.58), Kugel-Kugel-Stöße (0.45) und tangentiale Reibung (0.985-Faktor) sind getrennt parametrisiert.</li>
-        <li><b>Gravitation &amp; Widerstand:</b> Skalierte Fallbeschleunigung und leichter Luftwiderstand formen realistische Trajektorien.</li>
-        <li><b>Kein Zufallsgenerator in der Kollision:</b> Die Verteilung entsteht deterministisch aus der chaotischen Empfindlichkeit der Stöße. Das entspricht der realen Physik und ist zugleich reproduzierbar (Seed steuert nur die minimale Abwurf-Ungenauigkeit).</li>
-        <li><b>Kugel-Rotation:</b> Rollende Kugeln rotieren sichtbar – ein Detail, das die Optik deutlich belebt.</li>
-        <li><b>Leistung:</b> Räumliche Bucket-Kollision (nur benachbarte Nagelreihen &amp; Kugel-Buckets) hält 300 Kugeln bei 120 Hz flüssig, auch auf dem Raspberry Pi.</li>
+        <li data-i18n="doc_li1a"><b>Fixer Timestep:</b> Die Welt wird mit 120 Hz in Sub-Schritten berechnet, unabhängig von der Bildrate. Das verhindert „Tunneln&ldquo; durch Nägel auch bei 3×-Geschwindigkeit.</li>
+        <li data-i18n="doc_li1b"><b>Teilelastische Stöße:</b> Restitution (Default 0.62) bestimmt den Energieverlust an Pegs; Wände (0.58), Kugel-Kugel-Stöße (0.45) und tangentiale Reibung (0.985-Faktor) sind getrennt parametrisiert.</li>
+        <li data-i18n="doc_li1c"><b>Gravitation &amp; Widerstand:</b> Skalierte Fallbeschleunigung und leichter Luftwiderstand formen realistische Trajektorien.</li>
+        <li data-i18n="doc_li1d"><b>Kein Zufallsgenerator in der Kollision:</b> Die Verteilung entsteht deterministisch aus der chaotischen Empfindlichkeit der Stöße. Das entspricht der realen Physik und ist zugleich reproduzierbar (Seed steuert nur die minimale Abwurf-Ungenauigkeit).</li>
+        <li data-i18n="doc_li1e"><b>Kugel-Rotation:</b> Rollende Kugeln rotieren sichtbar – ein Detail, das die Optik deutlich belebt.</li>
+        <li data-i18n="doc_li1f"><b>Leistung:</b> Räumliche Bucket-Kollision (nur benachbarte Nagelreihen &amp; Kugel-Buckets) hält 300 Kugeln bei 120 Hz flüssig, auch auf dem Raspberry Pi.</li>
       </ul>
     </div>
   </details>
   <details class="acc">
-    <summary>Formeln auf einen Blick</summary>
+    <summary data-i18n="doc_sum2">Formeln auf einen Blick</summary>
     <div class="body prose">
       <div class="formula">μ = n·p &nbsp;·&nbsp; σ = √(n·p·(1−p)) &nbsp;·&nbsp; φ(z) = <span class="frac"><span>1</span><span>√(2π)</span></span>·e<sup>−z²/2</sup> &nbsp;·&nbsp; z = <span class="frac"><span>k − μ</span><span>σ</span></span></div>
     </div>
   </details>
   <details class="acc">
-    <summary>Weiterführende Ressourcen</summary>
+    <summary data-i18n="doc_sum3">Weiterführende Ressourcen</summary>
     <div class="body prose">
       <ul>
-        <li>Wikipedia: <i>Galton board</i> / <i>Bean machine</i> – en.wikipedia.org/wiki/Galton_board</li>
-        <li>Wikipedia: <i>Francis Galton</i> – en.wikipedia.org/wiki/Francis_Galton</li>
-        <li>Britannica: <i>Sir Francis Galton</i> – britannica.com/biography/Francis-Galton</li>
-        <li>Stigler, S. M. (1986): <i>The History of Statistics: The Measurement of Uncertainty before 1900</i>, Harvard University Press.</li>
-        <li>Freedman, D., Pisani, R., Purves, R. (2007): <i>Statistics</i>, 4. Aufl., W. W. Norton.</li>
+        <li data-i18n="doc_li3a">Wikipedia: <i>Galton board</i> / <i>Bean machine</i> – en.wikipedia.org/wiki/Galton_board</li>
+        <li data-i18n="doc_li3b">Wikipedia: <i>Francis Galton</i> – en.wikipedia.org/wiki/Francis_Galton</li>
+        <li data-i18n="doc_li3c">Britannica: <i>Sir Francis Galton</i> – britannica.com/biography/Francis-Galton</li>
+        <li data-i18n="doc_li3d">Stigler, S. M. (1986): <i>The History of Statistics: The Measurement of Uncertainty before 1900</i>, Harvard University Press.</li>
+        <li data-i18n="doc_li3e">Freedman, D., Pisani, R., Purves, R. (2007): <i>Statistics</i>, 4. Aufl., W. W. Norton.</li>
       </ul>
-      <p class="cite">Alle Quellen zugegriffen im August 2026. Die Links sind reine Verweise; die Datei selbst arbeitet vollständig offline.</p>
+      <p class="cite" data-i18n="doc_cite">Alle Quellen zugegriffen im August 2026. Die Links sind reine Verweise; die Datei selbst arbeitet vollständig offline.</p>
     </div>
   </details>
 </section>
@@ -1390,6 +1399,161 @@ details.acc .body{padding:4px 16px 14px}
   } else {
     init();
   }
+})();
+</script>
+
+<script>
+/* ==== I18N: Deutsch/English (analog Sun-Tracker) ==== */
+var GB_LANG = (function(){ try{ return localStorage.getItem('gb-lang') || 'de'; }catch(e){ return 'de'; } })();
+var GB_DE_ORIG = {};
+function gbSnapDe(){
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var k = el.getAttribute('data-i18n'); if (k && !(k in GB_DE_ORIG)) GB_DE_ORIG[k] = el.innerHTML;
+  });
+  document.querySelectorAll('[data-i18n-tip]').forEach(function(el){
+    var k = el.getAttribute('data-i18n-tip'); if (k && !(k in GB_DE_ORIG)) GB_DE_ORIG[k] = el.getAttribute('data-tip') || '';
+  });
+  document.querySelectorAll('[data-i18n-tiptitle]').forEach(function(el){
+    var k = el.getAttribute('data-i18n-tiptitle'); if (k && !(k in GB_DE_ORIG)) GB_DE_ORIG[k] = el.getAttribute('data-title') || '';
+  });
+}
+var GB_I18N = { en: {
+  kicker: 'Galton Board &middot; Quincunx',
+  sub: 'A physically realistic simulation with an elegant wooden frame, golden brass pegs and a live-calculated bell curve &ndash; including an interactive probability calculator and in-depth theory.',
+  h_steuerung: '<span class="no">01</span>Controls &amp; Parameters',
+  lead_steuerung: 'All parameters can be adjusted live. <b>Number of balls</b> and <b>levels</b> are pre-set to common values. Changing the board geometry automatically resets the simulation.',
+  lb_balls: 'Number of balls', tip_balls: 'How many balls fall into the board at the start. Freely adjustable &ndash; common: 300. More balls &rarr; fuller bell curve, more computation.',
+  lb_rows: 'Levels (peg rows)', tip_rows: 'Number of peg rows = number of coin flips n of the binomial distribution. Freely adjustable. They produce rows+1 bins. Common: 12.',
+  lb_ballR: 'Ball size (px)', tip_ballR: 'Radius of the balls in screen pixels. Freely adjustable (internally 1&ndash;10 px). Smaller balls fall faster and look finer; larger ones are easier to watch.',
+  lb_rest: 'Elasticity', tip_rest: 'Restitution coefficient of ball&ndash;peg collisions. Freely adjustable: 0 = fully inelastic (sticks), 1 = perfectly elastic, &gt;1 = energy gain. Realistic: 0.55&ndash;0.75.',
+  lb_grav: 'Gravity', tip_grav: 'Scaled gravitational acceleration, freely adjustable (default 9.81). Affects the visual fall speed only; the distribution is independent of it.',
+  lb_speed: 'Sim. speed', tip_speed: 'Time scaling, freely adjustable. At higher values all balls fall noticeably faster, while the physics stays identical thanks to fixed substeps (no tunnelling artefacts).',
+  lb_interval: 'Drop interval (ms)', tip_interval: 'Time between individual balls, freely adjustable (ms). A shorter interval = a stronger burst, a longer one = calmer, individually observable falls.',
+  lb_seed: 'Seed', tip_seed: 'Seed for the minimal, deterministic drop jitter, freely adjustable. Classic stochastic view: the distribution itself arises from the physical chaos of the collisions, not from a random generator.',
+  lb_sound: 'Collision sound', tip_sound: 'Realistic clicking sounds on peg and wall collisions (WebAudio, completely offline, no samples). Toggleable. The first start requires a click or tap once (browser autoplay rule).',
+  hint_toggle: 'Tip: <b>Spacebar</b> toggles start/pause (outside input fields)',
+  btn_start: '<b>&#9654;</b> Start', btn_pause: '<b>&#9208;</b> Pause', btn_reset: '<b>&#8634;</b> Reset',
+  h_board: '<span class="no">02</span>The Board',
+  legend_freq: 'Bin frequency (live)', legend_normal: 'Normal distribution (from the data)', hist_note: 'No balls dropped yet.',
+  stat_total: 'Total balls', stat_total_d: 'of 300', stat_mean: 'Mean x&#772;', stat_mean_d: 'theoretical &#956; = 6.0',
+  stat_sigma: 'Std. dev. &#963;', stat_sigma_d: 'theoretical &#963; = 1.73', stat_mode: 'Mode (most frequent bin)',
+  h_calc: '<span class="no">03</span>Probability calculator (real-time)',
+  lead_calc: 'Enter the parameters of the binomial distribution &ndash; all results appear instantly as you type. The theoretical values match exactly what your Galton Board approximates.',
+  lb_calcN: 'n (coin flips / levels)', tip_calcN: 'Number of Bernoulli experiments (peg levels). On the Galton Board, n equals the number of peg rows a ball passes. Freely adjustable.',
+  lb_calcP: 'p (probability)', tip_calcP: 'Probability of "right" at a single peg. Freely adjustable 0&ndash;1. For a symmetric board p = 0.5; a tilted board shifts the curve.',
+  lb_calcK: 'k (hits / bin)', tip_calcK: 'Number of "right" decisions = bin number. Freely adjustable (internally capped at 0&hellip;n).',
+  out_comb: 'C(n, k) binomial coefficient', out_exact: 'P(X = k) exactly', out_cum: 'P(X &le; k) cumulative',
+  out_mean: 'Expected value &#956; = n&middot;p', out_var: 'Variance &#963;&sup2; = n&middot;p&middot;(1&minus;p)',
+  out_sigma: 'Std. dev. &#963;', out_z: 'z-score ((k &minus; &#956;)/&#963;)', out_phi: 'Normal approximation &#966;(z)',
+  pasc_heading: 'Pascal&rsquo;s triangle (n = 0 &hellip; min(n, 14))',
+  pasc_hint: 'The ball count per bin corresponds (scaled) to the numbers of this row. Highlighted cell = C(n, k) of your calculator entry.',
+  h_theory: '<span class="no">04</span>The mathematics behind the Galton Board',
+  lead_theory: 'Why does a board with nails produce a bell curve? The answer leads step by step from a simple coin flip to the Central Limit Theorem.',
+  s041: '<span class="step">04.1</span>The Bernoulli experiment',
+  p041a: 'Each individual nail on the Galton Board is a <b>random experiment with two outcomes</b>: when a ball hits a peg it deflects either <b>left</b> or <b>right</b>. On a perfectly symmetric board both possibilities are equally likely. Such experiments are called <b>Bernoulli experiments</b> after Jakob Bernoulli; the classical notation is',
+  p041b: 'The ball passes exactly <var>n</var> such decisions &ndash; one per peg row. Its position in bin <var>k</var> therefore equals the number of right deflections among <var>n</var> independent trials.',
+  s042: '<span class="step">04.2</span>The binomial distribution',
+  p042a: 'The random variable X = &bdquo;number of right deflections&ldquo; is <b>binomially distributed</b>: X ~ B(n, p). The probability of deflecting right exactly <var>k</var> times is',
+  p042b: 'Each individual path through the board has probability p<sup>k</sup>(1&minus;p)<sup>n&minus;k</sup> &ndash; identical for all paths with the same number of rights. The <b>binomial coefficient</b> C(n, k) counts how many distinct paths lead into the same bin. With p = 0.5 the formula simplifies to',
+  note042: '<b>Key insight:</b> The Galton Board is an <b>analog computer for binomial coefficients</b> &ndash; the height of the ball stack in bin <var>k</var> is proportional to C(n, k).',
+  s043: '<span class="step">04.3</span>Pascal&rsquo;s triangle',
+  p043a: 'The binomial coefficients can be built row by row using the recursion C(n, k) = C(n&minus;1, k&minus;1) + C(n&minus;1, k) &ndash; exactly what <b>Pascal&rsquo;s triangle</b> does. Reading one row of the triangle as bin heights gives exactly the result of an ideal Galton Board:',
+  p043b: 'The sum of each row is 2<sup>n</sup> &ndash; the total number of all possible paths. Important for the board: the coefficients are symmetric (C(n, k) = C(n, n&minus;k)), which is why the distribution is perfectly symmetric about the centre.',
+  s044: '<span class="step">04.4</span>From binomial to normal distribution (De Moivre &amp; Laplace)',
+  p044a: 'Abraham de Moivre showed in 1733 that the binomial distribution tends to the <b>bell curve</b> as <var>n</var> grows; Pierre-Simon Laplace generalised this in 1812 into the <b>De Moivre&ndash;Laplace theorem</b> &ndash; the first special case of the Central Limit Theorem:',
+  p044b: 'with mean &#956; = n&middot;p and standard deviation &#963; = &radic;(n&middot;p&middot;(1&minus;p)). Already at <var>n</var> = 12 peg rows the approximation is excellent for practical purposes &ndash; visible in the red curve overlay above the histogram.',
+  s045: '<span class="step">04.5</span>Central Limit Theorem &amp; the &bdquo;analog computer&ldquo;',
+  p045a: 'The <b>Central Limit Theorem</b> (CLT) states: the sum of many independent, identically distributed random effects is approximately normally distributed &ndash; regardless of the shape of the individual effects. The path of a ball is the sum of <var>n</var> individual decisions (&plusmn;1 per deflection), so the CLT applies directly. The board makes this mathematics <b>physically visible</b> without a computer doing the arithmetic. An honest caveat matters: real boards are never perfectly symmetric (every peg has a small, individual p &#8800; 0.5), and the balls collide with each other &ndash; so measurement and theory remain approximate but not exactly equal.',
+  h_history: '<span class="no">05</span>History: Francis Galton and the Quincunx',
+  h_apps: '<span class="no">06</span>Real-world applications',
+  
+    lead_history: 'The Galton Board is one of the oldest statistical demonstration devices in the world &ndash; and its origin story is fascinating and critically important to consider at the same time.',
+    s051: '<span class="step">05.1</span>Francis Galton (1822&ndash;1911)',
+    p051a: 'Francis Galton, an English polymath and cousin of Charles Darwin, is regarded as one of the founders of modern statistics. He coined fundamental concepts that still appear in every statistics lecture: <b>correlation</b>, <b>regression analysis</b>, the phrase <b>&bdquo;nature versus nurture&ldquo;</b> and systematic methods for measuring human traits. His data work (e.g. on pea sizes, fingerprints, and the heights of parents and children) laid the foundations of biometrics.',
+    s052: '<span class="step">05.2</span>The Quincunx &ndash; the birth of the board',
+    p052a: 'Around 1873 Galton demonstrated a device in his lectures that he called the <b>Quincunx</b> &ndash; named after the Latin word for the five-dot arrangement on a die (quincunx = five), because the peg arrangement resembles the five-pip face of a playing die. In his book <i>Natural Inheritance</i> (1889) he described the device in detail. His aim was to illustrate vividly how a bell-shaped distribution, the <b>&bdquo;law of error&ldquo;</b> (today: the normal distribution), emerges from many small, independent influences &ndash; and how this law explains his famous observation of <b>regression to the median</b> (regression to mediocrity).',
+    s053: '<span class="step">05.3</span>Its spread',
+    li053a: 'By the end of the 19th century the Quincunx had become the standard demonstration device in statistics teaching (e.g. through Karl Pearson, who formalised Galton&rsquo;s statistics mathematically).',
+    li053b: 'In the English-speaking world the device is still called the <b>Galton Board</b> or <b>Bean Machine</b> (&bdquo;bean machine&ldquo;), because beans were originally used instead of balls.',
+    li053c: 'Modern teaching tools continue to use the principle: as a discrete Galton Board in statistics apps, but also as a physical exhibit in science centres worldwide.',
+    warn051: '<b>Critical note &ndash; essential:</b> Galton was a fervent proponent of <b>eugenics</b>, i.e. the idea of &bdquo;improving&ldquo; human reproduction, and thereby influenced ideologies that led to forced sterilisation and crimes in the 20th century. His statistical tools are scientific achievements &ndash; his social demands are not, and are clearly rejected by modern science and society. The Galton Board itself is a neutral teaching tool: it shows mathematics, not value judgements. This separation of scientific work from the inventor&rsquo;s personal ideology is essential for an honest consideration.',
+    cite051: 'Sources: Galton, F. (1889) <i>Natural Inheritance</i>; Stigler, S. M. (1986) <i>The History of Statistics</i>, Harvard Univ. Press; Freedman, Pisani, Purves (2007) <i>Statistics</i>, 4th ed.; Gould, S. J. (1981) <i>The Mismeasure of Man</i> (critical reappraisal). Accessed August 2026.',
+    lead_apps: 'The Galton principle &ndash; many small independent effects combine into a bell curve &ndash; underlies surprisingly many disciplines. Here are the most important ones &ndash; honestly assessed, including their limits.',
+    app_qm_head: '🏭 Quality management &amp; Six Sigma',
+    app_qm_p: 'Every production line is subject to random variation (material, machine, people). Shewhart control charts (1924) and the Six Sigma methodology use the bell curve to distinguish between &bdquo;normal&ldquo; dispersion and real disturbances. The process capability Cpk compares the position of the curve with the tolerance limits.',
+    app_qm_key: 'Key insight: variation is inherent &ndash; statistics separates randomness from system error.',
+    app_fin_head: '📈 Financial markets: random walk &amp; options',
+    app_fin_p: 'Louis Bachelier described prices in 1900 in <i>Théorie de la spéculation</i> as the sum of many small steps &ndash; the mathematical Galton board of the financial world. Brownian-motion models and the Black-Scholes formula (1973) are based on this.',
+    app_fin_key: 'Key insight: price movements resemble a bell curve &ndash; but real markets have &bdquo;fat tails&ldquo; (fat tails) and phases of clustered volatility. Models are approximations, not truths.',
+    app_bio_head: '🧬 Genetics &amp; biology',
+    app_bio_p: 'Quantitative traits such as body height arise from the sum of many genes plus environmental influences &ndash; classically normally distributed. Galton\u2019s original motivation was precisely this question of inheritance: he observed the &bdquo;regression to the median&ldquo;, the sliding back of extreme parental values toward the population mean.',
+    app_bio_key: 'Key insight: many small, additive effects &rarr; bell curve, even if each individual effect is discrete.',
+    app_soc_head: '🧑‍🤝‍🧑 Social &amp; medical sciences',
+    app_soc_p: 'Measurement errors in surveys and diagnostics can be modelled as the sum of many small sources of error. The confidence interval of the sample mean follows directly from the CLT &ndash; the Galton Board is the best intuitive explanation of why a mean over 30 observations is &bdquo;normally&ldquo; distributed.',
+    app_soc_key: 'Key insight: income, wealth and abilities are NOT normally distributed (lognormal, Pareto) &ndash; only apply the CLT where it is professionally justified.',
+    app_cs_head: '🤖 Computer science &amp; AI: bagging &amp; random forests',
+    app_cs_p: 'Random Forests (Breiman 2001) train hundreds of &bdquo;weak&ldquo; decision trees on random samples and let them vote. The variance reduction by averaging many individual models is statistically exactly the Galton principle: the collective result is more stable than any single one.',
+    app_cs_key: 'Key insight: more independent observers &rarr; bell-shaped narrower, more reliable result.',
+    doc_sum1: 'Physics engine: how &bdquo;real&ldquo; is the simulation?',
+    doc_sum2: 'Formulas at a glance',
+    doc_sum3: 'Further resources',
+    doc_li1a: '<b>Fixed timestep:</b> The world is computed at 120 Hz in sub-steps, independent of the frame rate. This prevents &bdquo;tunnelling&ldquo; through pegs even at 3× speed.',
+    doc_li1b: '<b>Semi-elastic collisions:</b> Restitution (default 0.62) determines the energy loss at pegs; walls (0.58), ball&ndash;ball collisions (0.45) and tangential friction (0.985 factor) are parameterised separately.',
+    doc_li1c: '<b>Gravity &amp; drag:</b> Scaled gravitational acceleration and light air resistance shape realistic trajectories.',
+    doc_li1d: '<b>No random generator in the collision:</b> The distribution arises deterministically from the chaotic sensitivity of the collisions. This mirrors real physics and is simultaneously reproducible (the seed controls only the minimal drop jitter).',
+    doc_li1e: '<b>Ball rotation:</b> Rolling balls rotate visibly &ndash; a detail that brings the optics to life.',
+    doc_li1f: '<b>Performance:</b> Spatial bucket collision (only neighbouring peg rows &amp; ball buckets) keeps 300 balls fluid at 120 Hz, even on a Raspberry Pi.',
+    doc_li3a: 'Wikipedia: <i>Galton board</i> / <i>Bean machine</i> &ndash; en.wikipedia.org/wiki/Galton_board',
+    doc_li3b: 'Wikipedia: <i>Francis Galton</i> &ndash; en.wikipedia.org/wiki/Francis_Galton',
+    doc_li3c: 'Britannica: <i>Sir Francis Galton</i> &ndash; britannica.com/biography/Francis-Galton',
+    doc_li3d: 'Stigler, S. M. (1986): <i>The History of Statistics: The Measurement of Uncertainty before 1900</i>, Harvard University Press.',
+    doc_li3e: 'Freedman, D., Pisani, R., Purves, R. (2007): <i>Statistics</i>, 4th ed., W. W. Norton.',
+    doc_cite: 'All sources accessed in August 2026. The links are mere references; the file itself works completely offline.',
+
+    hint_d_300: 'Default: 300',
+    hint_d_rows: 'Default: 12 &rarr; 13 bins',
+    hint_d_45: 'Default: 4.5',
+    hint_d_062: 'Default: 0.62',
+    hint_d_grav: 'Default: 9.81 (scaled)',
+    hint_d_speed: 'Default: 1&times;',
+    hint_d_int: 'Default: 38 ms',
+    hint_d_seed: 'Default: 42',
+    hint_d_sound: 'Default: on',
+} };
+
+function gbApplyLang(lang){
+  var t = GB_I18N[lang] || {};
+  document.documentElement.setAttribute('lang', lang === 'en' ? 'en' : 'de');
+  var isEn = lang === 'en';
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var k = el.getAttribute('data-i18n'); if (!k) return;
+    if (isEn && t[k]) el.innerHTML = t[k];
+    else if (!isEn && (k in GB_DE_ORIG)) el.innerHTML = GB_DE_ORIG[k];
+  });
+  document.querySelectorAll('[data-i18n-tip]').forEach(function(el){
+    var k = el.getAttribute('data-i18n-tip'); if (!k) return;
+    if (isEn && t[k]) { el.setAttribute('data-tip', t[k].replace(/<[^>]+>/g,'')); }
+    else if (!isEn && (k in GB_DE_ORIG)) { el.setAttribute('data-tip', GB_DE_ORIG[k]); }
+  });
+  document.querySelectorAll('[data-i18n-tiptitle]').forEach(function(el){
+    var k = el.getAttribute('data-i18n-tiptitle'); if (!k) return;
+    if (isEn && t[k]) el.setAttribute('data-title', t[k].replace(/<[^>]+>/g,''));
+    else if (!isEn && (k in GB_DE_ORIG)) el.setAttribute('data-title', GB_DE_ORIG[k]);
+  });
+  /* Toggle: Flagge im langBtn setzen (analog Sun-Tracker cycleLang) */
+  var btn = document.getElementById('langBtn');
+  if (btn) btn.innerHTML = '<span style="font-size:22px">' + (isEn ? '🇬🇧' : '🇩🇪') + '</span>';
+  try{ localStorage.setItem('gb-lang', lang); }catch(e){}
+}
+function gbSetLang(lang){ GB_LANG = lang; gbApplyLang(lang); }
+(function(){
+  var btn = document.getElementById('langBtn');
+  if (btn) btn.addEventListener('click', function(){
+    gbSetLang(GB_LANG === 'de' ? 'en' : 'de');
+  });
+  function boot(){ gbSnapDe(); gbApplyLang(GB_LANG); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
 })();
 </script>
 
