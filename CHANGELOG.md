@@ -1,5 +1,28 @@
 # Changelog – Galton Board
 
+## [V11] – 2026-08-30
+
+### Vollständige Deutsche/Englisch-Umschaltung (analog Sun-Tracker)
+
+Kein Physik-Umbau — die Simulation bleibt inhaltlich identisch (Verifikation via Harness bestätigt:
+χ² = 3.30 bei 300K/12E, 20/20 geschwindigkeitsunabhängig). Neu ist die **vollständige Zweisprachigkeit**:
+
+**Änderungen:**
+- **Sprach-Toggle** (oben rechts, rund, analog Sun-Tracker `langBtn`): ein Button zeigt die aktive
+  Flagge 🇩🇪/🇬🇧, Klick schaltet durch Deutsch ↔ English.
+- **Vollständige Übersetzung** aller Texte: Kern-UI (Steuerung, Buttons, Statistik, Rechner,
+  Tooltips), Theorie (Bernoulli→CLT), Historie (inkl. Eugenik-Warnblock), Anwendungen, Doku,
+  Default-Hinweise.
+- **i18n-Architektur:** zentrales `GB_I18N`-Objekt (EN; DE = HTML-Original als Fallback/SEO),
+  generische `gbApplyLang()` über `data-i18n`-/`data-i18n-tip`-Attribute, `GB_DE_ORIG`-Snapshot
+  stellt die deutschen Originale beim Rückschalten exakt wieder her.
+- **Persistenz:** gewählte Sprache wird in `localStorage` (`gb-lang`) gespeichert.
+- Neue Datei `build/Galton_Board_V11.html` (V10 bleibt als Referenz erhalten).
+
+**Verifikation (V11):** `verify_static.py` OK (JS-Syntax + IDs), `verify_fullrun.js` 300/12
+(χ²=3.30) + 600/12, `verify_speed20.js` 20/20 OK. Browser-Test: EN→DE→EN-Wechsel übersetzt
+alle Texte samt Tooltips und stellt Originale exakt wieder her.
+
 ## [V10.2-deploy] – 2026-08-30
 
 ### Veröffentlichung & DSGVO (Hosting auf galton-board.ingenieur-tools.de)

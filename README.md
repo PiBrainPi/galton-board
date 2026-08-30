@@ -5,13 +5,13 @@ als **eine HTML-Datei**. Edler Holzrahmen, goldene Messingnägel, glänzende Kug
 Live-Histogramm mit Normalverteilungs-Overlay, interaktiver Wahrscheinlichkeitsrechner
 sowie ausführliche Theorie.
 
-**Aktuelle Version:** `build/Galton_Board_V10.html`
+**Aktuelle Version:** `build/Galton_Board_V11.html` (DE/EN – zweisprachig)
 
 **🌐 Live:** [https://galton-board.ingenieur-tools.de/](https://galton-board.ingenieur-tools.de/)
 
 ## Schnellstart
 
-Einfach `build/Galton_Board_V10.html` im Browser öffnen (Doppelklick genügt – keine
+Einfach `build/Galton_Board_V11.html` im Browser öffnen (Doppelklick genügt – keine
 Installation, kein Server).
 
 ## Features
@@ -28,6 +28,7 @@ Installation, kein Server).
 | **Historie** | Francis Galton, Quincunx (1873/1889) – mit kritischer Einordnung zur Eugenik |
 | **Anwendungen** | Six Sigma, Random Walk/Black-Scholes, Brownsche Bewegung, Genetik, Sozialwissenschaften, Random Forests |
 | **Audio** | Kollisions-Klacker per WebAudio (offline, abschaltbar) |
+| **Sprache** | Deutsch / English – umschaltbar über den runden Toggle-Button oben rechts (Flagge 🇩🇪/🇬🇧), Auswahl wird gespeichert (`localStorage`). Analog Sun-Tracker. |
 
 ## Bedienung
 
@@ -42,7 +43,7 @@ Installation, kein Server).
 ```
 Galton Board/
 ├── build/
-│   └── Galton_Board_V10.html      ← Lieferbare Datei (iteriert als _V01 … _V10.1)
+│   └── Galton_Board_V11.html      ← Lieferbare Datei (iteriert als _V01 … _V11)
 ├── docs/
 │   ├── Physik-Modell.md           ← Formeln, Konstanten, Substep-Verfahren
 │   └── Theorie-Referenz.md        ← Mathe + Historie + Anwendungen
@@ -68,17 +69,17 @@ Jede Version wird vor Auslieferung hart geprüft:
 cd "~/Projects/Galton Board"
 
 # 1) Statisch: Syntax + IDs
-python3 tests/verify_static.py build/Galton_Board_V10.html
+python3 tests/verify_static.py build/Galton_Board_V11.html
 
 # 2) Volllauf: Physik + Rendering
-node tests/verify_fullrun.js build/Galton_Board_V10.html 300 12
-node tests/verify_fullrun.js build/Galton_Board_V10.html 600 12
+node tests/verify_fullrun.js build/Galton_Board_V11.html 300 12
+node tests/verify_fullrun.js build/Galton_Board_V11.html 600 12
 
 # 3) Geschwindigkeitsunabhängigkeit (20 Läufe, speed 1–20)
-node tests/verify_speed20.js build/Galton_Board_V10.html
+node tests/verify_speed20.js build/Galton_Board_V11.html
 
 # 4) Randfach-Diagnose über alle Ebenenzahlen
-node tests/diag_rows.js build/Galton_Board_V10.html
+node tests/diag_rows.js build/Galton_Board_V11.html
 ```
 
 Der Physik-Harness testet die Fachverteilung mit χ²-Gütetest gegen B(n, 0.5):
@@ -131,7 +132,7 @@ Das Galton Board ist als **viertes Tool** live auf dem GitHub-Pages-Portal `inge
 | **Custom Domain** | `galton-board.ingenieur-tools.de` (CNAME → `pibrainpi.github.io.`) |
 | **Lizenz** | MIT (Copyright Fabian Bussenius) |
 
-### Wie deployen (bei Änderungen an V10)
+### Wie deployen (bei Änderungen an V11)
 
 ```bash
 cd "$HOME/Projects/Galton Board"
@@ -140,9 +141,9 @@ git add -A && git commit -m "Beschreibung" && git push origin main
 
 # 2. Single-File auf gh-pages-Branch aktualisieren
 git checkout gh-pages
-cp build/Galton_Board_V10.html index.html
+cp build/Galton_Board_V11.html index.html
 echo "galton-board.ingenieur-tools.de" > CNAME     # bleibt erhalten
-git add index.html CNAME && git commit -m "Deploy V10-Update"
+git add index.html CNAME && git commit -m "Deploy V11-Update"
 git fetch origin gh-pages && git rebase origin/gh-pages   # GitHub-CNAME-Commit einholen
 git push origin gh-pages
 git checkout main
