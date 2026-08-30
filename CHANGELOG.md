@@ -1,5 +1,29 @@
 # Changelog – Galton Board
 
+## [V10.2-deploy] – 2026-08-30
+
+### Veröffentlichung & DSGVO (Hosting auf galton-board.ingenieur-tools.de)
+
+Kein Physik-Umbau — reine Publikations- und Rechtsänderung an der bestehenden V10.1-Datei
+(`build/Galton_Board_V10.html`, die Datei trägt den Namen `V10`).
+
+**Änderungen:**
+- **Impressum** (Modals, § 5 DDG) im Footer ergänzt — Betreiber Fabian Bussenius
+  (Jüthornstraße 50, 22043 Hamburg, fabibuss@web.de).
+- **Datenschutzerklärung** (Modal) ergänzt: kein Tracking/Cookies, WebAudio lokal,
+  GitHub-Pages-Hosting, Betroffenenrechte.
+- Beide **design-neutral** (nutzen Theme-Variablen `--panel`/`--gold`; das edle Holz-/Gold-Design
+  bleibt unverändert).
+- **Veröffentlicht** als öffentliches Repo `PiBrainPi/galton-board` (MIT, `LICENSE` neu),
+  README aktualisiert (Live-URL, Dateiname V10 korrigiert, DSGVO-/Lizenz-Abschnitt).
+- **Live:** `https://galton-board.ingenieur-tools.de/` (GH Pages, Custom Domain, HTTPS aktiv).
+- Verlinkt als Tool-Karte „Galton Board" auf der Portal-Startseite `ingenieur-tools.de`.
+
+**Verifikation (V10.2-deploy):** App lädt fehlerfrei, Modals öffnen/schließen korrekt, kein
+Einfluss auf die Simulation (nur am Dateiende nach dem letzten `</script>` ergänzt).
+Die 2 beim Erstload auftretenden JS-Exceptions sind unverändert die Original-WebAudio-Autoplay-
+Bindungen (Sound startet erst nach Nutzerklick) — keine Eigenfehler.
+
 ## [V10.1] – 2026-08-15
 
 ### Fix: Randfächer bei wenigen Ebenen blieben leer (Bug)

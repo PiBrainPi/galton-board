@@ -117,3 +117,38 @@ sind in der App im Footer eingebaut (Links „Impressum" / „Datenschutz").
 ## Lizenz
 
 MIT — siehe [LICENSE](LICENSE). © 2026 Fabian Bussenius.
+
+## Deployment & Hosting (Stand: 30.08.2026)
+
+Das Galton Board ist als **viertes Tool** live auf dem GitHub-Pages-Portal `ingenieur-tools.de`:
+
+| Feld | Wert |
+|---|---|
+| **Live-URL** | `https://galton-board.ingenieur-tools.de/` (HTTP + HTTPS aktiv) |
+| **GitHub-Repo** | `https://github.com/PiBrainPi/galton-board` (öffentlich) |
+| **Quell-Branch** | `main` (build/, docs/, tests/, README, CHANGELOG, LICENSE) |
+| **Deploy-Branch** | `gh-pages` (enthält nur `index.html` = Single-File-App + `CNAME`) |
+| **Custom Domain** | `galton-board.ingenieur-tools.de` (CNAME → `pibrainpi.github.io.`) |
+| **Lizenz** | MIT (Copyright Fabian Bussenius) |
+
+### Wie deployen (bei Änderungen an V10)
+
+```bash
+cd "$HOME/Projects/Galton Board"
+# 1. Quell-Änderung committen (main)
+git add -A && git commit -m "Beschreibung" && git push origin main
+
+# 2. Single-File auf gh-pages-Branch aktualisieren
+git checkout gh-pages
+cp build/Galton_Board_V10.html index.html
+echo "galton-board.ingenieur-tools.de" > CNAME     # bleibt erhalten
+git add index.html CNAME && git commit -m "Deploy V10-Update"
+git fetch origin gh-pages && git rebase origin/gh-pages   # GitHub-CNAME-Commit einholen
+git push origin gh-pages
+git checkout main
+```
+
+> **Wichtig (Pitfall):** GitHub schreibt bei aktivem Pages automatisch einen `Create CNAME`-Commit
+> in den `gh-pages`-Branch → vor jedem Push **`git fetch` + `git rebase origin/gh-pages`**.
+> Nach `git checkout gh-pages` liegen die Quell-Dateien als **untracked** im Arbeitsbaum — normal,
+> nur `index.html` + `CNAME` ändern/committen.
