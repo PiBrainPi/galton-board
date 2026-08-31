@@ -11,7 +11,7 @@ sowie ausführliche Theorie.
 
 ## Schnellstart
 
-Einfach `build/Galton_Board_V11.html` im Browser öffnen (Doppelklick genügt – keine
+Einfach `build/Galton_Board_V12_2026-08-31.html` im Browser öffnen (Doppelklick genügt – keine
 Installation, kein Server).
 
 ## Features
@@ -69,17 +69,17 @@ Jede Version wird vor Auslieferung hart geprüft:
 cd "~/Projects/Galton Board"
 
 # 1) Statisch: Syntax + IDs
-python3 tests/verify_static.py build/Galton_Board_V11.html
+python3 tests/verify_static.py build/Galton_Board_V12_2026-08-31.html
 
 # 2) Volllauf: Physik + Rendering
-node tests/verify_fullrun.js build/Galton_Board_V11.html 300 12
-node tests/verify_fullrun.js build/Galton_Board_V11.html 600 12
+node tests/verify_fullrun.js build/Galton_Board_V12_2026-08-31.html 300 12
+node tests/verify_fullrun.js build/Galton_Board_V12_2026-08-31.html 600 12
 
 # 3) Geschwindigkeitsunabhängigkeit (20 Läufe, speed 1–20)
-node tests/verify_speed20.js build/Galton_Board_V11.html
+node tests/verify_speed20.js build/Galton_Board_V12_2026-08-31.html
 
 # 4) Randfach-Diagnose über alle Ebenenzahlen
-node tests/diag_rows.js build/Galton_Board_V11.html
+node tests/diag_rows.js build/Galton_Board_V12_2026-08-31.html
 ```
 
 Der Physik-Harness testet die Fachverteilung mit χ²-Gütetest gegen B(n, 0.5):
@@ -141,9 +141,9 @@ git add -A && git commit -m "Beschreibung" && git push origin main
 
 # 2. Single-File auf gh-pages-Branch aktualisieren
 git checkout gh-pages
-cp build/Galton_Board_V11.html index.html
+cp build/Galton_Board_V12_2026-08-31.html index.html
 echo "galton-board.ingenieur-tools.de" > CNAME     # bleibt erhalten
-git add index.html CNAME && git commit -m "Deploy V11-Update"
+git add index.html CNAME && git commit -m "Deploy V12-Update (DSGVO)"
 git fetch origin gh-pages && git rebase origin/gh-pages   # GitHub-CNAME-Commit einholen
 git push origin gh-pages
 git checkout main
