@@ -1593,24 +1593,59 @@ function gbSetLang(lang){ GB_LANG = lang; gbApplyLang(lang); }
 <div class="gb-overlay" id="gb-datenschutz-modal">
   <div class="gb-box">
     <button type="button" class="gb-close" data-gb-close="gb-datenschutz-modal" aria-label="Schließen">✕</button>
-    <h2>Datenschutzerklärung</h2>
-    <p class="gb-lead">für die Anwendung „Galton Board".</p>
-    <h3>Verantwortlicher</h3>
-    <p>Fabian Bussenius<br>Jüthornstraße 50<br>22043 Hamburg<br>E-Mail: <a href="mailto:fabibuss@web.de">fabibuss@web.de</a></p>
-    <h3>Grundsatz</h3>
-    <p>Das Galton Board ist eine vollständig lokale Anwendung. Sie speichert und überträgt
-    <strong>keine personenbezogenen Daten</strong>. Es werden keine Cookies gesetzt, kein Tracking
-    und keine Analyse-Dienste verwendet. Alle Berechnungen erfolgen direkt im Browser.</p>
-    <h3>Audio</h3>
-    <p>Der optionale Kollisions-Sound wird per WebAudio direkt im Browser erzeugt. Es erfolgt dabei
-    keine Datenübertragung.</p>
-    <h3>Hosting</h3>
-    <p>Die Seite wird über den Hosting-Anbieter GitHub Inc. (GitHub Pages) bereitgestellt. Beim Aufruf
-    können technisch notwendige Server-Logdaten (IP-Adresse, Zeitpunkt) verarbeitet werden.</p>
-    <h3>Ihre Rechte</h3>
-    <p>Sie haben das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung Ihrer
-    personenbezogenen Daten sowie auf Datenübertragbarkeit. Beschwerden richten Sie an eine
-    Datenschutz-Aufsichtsbehörde.</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <h2>Datenschutzerklärung</h2>
+      <button type="button" id="gb-ds-lang" style="font-size:.76rem;padding:3px 10px;border:1px solid var(--panel-line);border-radius:6px;background:var(--panel-text,#0000);color:var(--gold);cursor:pointer;">🇬🇧 English</button>
+    </div>
+    <div id="gb-ds-de">
+      <p class="gb-lead">für die Anwendung „Galton Board" · Stand: 31.08.2026</p>
+      <h3>Verantwortlicher</h3>
+      <p>Fabian Bussenius<br>Jüthornstraße 50<br>22043 Hamburg<br>E-Mail: <a href="mailto:fabibuss@web.de">fabibuss@web.de</a> · <a href="https://ingenieur-tools.de/impressum.html" target="_blank" rel="noopener noreferrer">Impressum</a></p>
+      <h3>Grundsatz</h3>
+      <p>Das Galton Board ist eine lokale Anwendung. Alle Berechnungen erfolgen direkt im Browser. Es werden
+      <strong>keine Analyse-Cookies, kein Tracking und keine Webanalyse-Dienste</strong> eingesetzt. Wir (Betreiber)
+      speichern selbst keine personenbezogenen Daten; auf die Server-Logs des Hosting-Anbieters (Abschnitt „Hosting")
+      wird hingewiesen.</p>
+      <h3>Lokale Speicherung (Browserspeicher)</h3>
+      <p>Ihre Sprachwahl wird lokal in Ihrem Browser gespeichert (<code>localStorage</code>, Schlüssel „gb-lang").
+      Dies dient allein dazu, Ihre Spracheinstellung zu merken (technisch erforderlich, §&nbsp;25 Abs.&nbsp;2 Nr.&nbsp;2 TDDDG).
+      Sie können den Browserspeicher jederzeit über die Browser-Einstellungen löschen.</p>
+      <h3>Audio</h3>
+      <p>Der optionale Kollisions-Sound wird per WebAudio direkt im Browser erzeugt. Es erfolgt dabei
+      keine Datenübertragung.</p>
+      <h3>Hosting</h3>
+      <p>Diese Seite wird über <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub Inc.</a>
+      (GitHub Pages; Server u.&nbsp;a. in den USA) bereitgestellt. Beim Aufruf verarbeitet GitHub technisch notwendige
+      Server-Logdaten (IP-Adresse, Zeitpunkt, aufgerufene Ressource). Rechtsgrundlage ist Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;f
+      DSGVO. GitHub ist nach dem EU-US Data Privacy Framework (DPF) zertifiziert; die Speicherdauer der Logs legt GitHub fest.</p>
+      <h3>Ihre Rechte</h3>
+      <p>Sie haben das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Verarbeitung Ihrer
+      personenbezogenen Daten sowie auf Datenübertragbarkeit und auf <strong>Widerspruch</strong> (Art.&nbsp;21 DSGVO).
+      Beschwerden richten Sie an die zuständige Aufsichtsbehörde: <a href="https://datenschutz-hamburg.de/" target="_blank" rel="noopener noreferrer">Hamburgische Beauftragte für Datenschutz und Informationsfreiheit (HmbBfDI)</a>.</p>
+    </div>
+    <div id="gb-ds-en" style="display:none;">
+      <p class="gb-lead">for the application "Galton Board" · Version: 31.08.2026</p>
+      <h3>Controller</h3>
+      <p>Fabian Bussenius<br>Jüthornstraße 50<br>22043 Hamburg<br>Germany<br>Email: <a href="mailto:fabibuss@web.de">fabibuss@web.de</a> · <a href="https://ingenieur-tools.de/impressum.html" target="_blank" rel="noopener noreferrer">Legal notice</a></p>
+      <h3>Principles</h3>
+      <p>The Galton Board is a local application. All calculations run directly in your browser. We do
+      <strong>not use analysis cookies, tracking, or web analytics services</strong>. As the operator we do not
+      store personal data ourselves; please see the "Hosting" section regarding server logs.</p>
+      <h3>Local storage (browser)</h3>
+      <p>Your language choice is stored locally in your browser (<code>localStorage</code>, key "gb-lang"). This serves
+      only to remember your language preference (technically necessary, §&nbsp;25(2)(2) TDDDG). You can clear your
+      browser storage at any time via your browser settings.</p>
+      <h3>Audio</h3>
+      <p>The optional collision sound is generated locally in your browser via WebAudio. No data is transmitted.</p>
+      <h3>Hosting</h3>
+      <p>This page is provided by <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub Inc.</a>
+      (GitHub Pages; servers incl. the US). When you visit, GitHub processes technically necessary server log data
+      (IP address, time, requested resource). Legal basis: Art.&nbsp;6(1)(f) GDPR. GitHub is certified under the
+      EU-US Data Privacy Framework (DPF); GitHub determines the retention period of the logs.</p>
+      <h3>Your rights</h3>
+      <p>You have the right to access, rectification, erasure, restriction of processing, data portability and to
+      <strong>object</strong> (Art.&nbsp;21 GDPR). Complaints may be addressed to the supervisory authority: <a href="https://datenschutz-hamburg.de/" target="_blank" rel="noopener noreferrer">Hamburgische Beauftragte für Datenschutz und Informationsfreiheit (HmbBfDI)</a>.</p>
+    </div>
   </div>
 </div>
 
@@ -1624,6 +1659,17 @@ function gbSetLang(lang){ GB_LANG = lang; gbApplyLang(lang); }
   document.querySelectorAll('.gb-close').forEach(function(b){ b.addEventListener('click',function(){ close(b.getAttribute('data-gb-close')); }); });
   document.querySelectorAll('.gb-overlay').forEach(function(m){ m.addEventListener('click',function(e){ if(e.target===m) close(m.id); }); });
   document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ document.querySelectorAll('.gb-overlay.open').forEach(function(m){ close(m.id); }); } });
+  // DS-Modal DE/EN-Umschaltung (V12)
+  var dsl=document.getElementById('gb-ds-lang'), dsOn=false;
+  if(dsl){
+    var dsDe=document.getElementById('gb-ds-de'), dsEn=document.getElementById('gb-ds-en');
+    dsl.addEventListener('click',function(){
+      dsOn=!dsOn;
+      if(dsDe) dsDe.style.display=dsOn?'none':'';
+      if(dsEn) dsEn.style.display=dsOn?'':'none';
+      dsl.textContent=dsOn?'🇩🇪 Deutsch':'🇬🇧 English';
+    });
+  }
 })();
 </script>
 
