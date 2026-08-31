@@ -1,5 +1,17 @@
 # Changelog – Galton Board
 
+## [V12] – 2026-08-31
+
+### DSGVO-Update (Datenschutz-Konformität)
+- **Datenschutz-Modal überarbeitet** (DE/EN umschaltbar im Modal):
+  - `gb-lang` (localStorage) **explizit benannt** als lokal gespeicherte Sprachpräferenz (TDDDG §25 Abs. 2 Nr. 2).
+  - Falsche Pauschalaussage „speichert und überträgt keine personenbezogenen Daten" **entfernt** → präzisiert:
+    Wir (Betreiber) speichern keine; Server-Logs beim Hosting-Anbieter (GitHub) korrekt abgegrenzt.
+  - Hosting: GitHub Pages (USA) + **EU-US Data Privacy Framework (DPF)** + Server-Logs (Zweck, IP, Zeitpunkt).
+  - **Widerspruchsrecht (Art. 21)** + zuständige Aufsichtsbehörde **HmbBfDI** namentlich.
+  - **Stand-Datum** 31.08.2026; Verweise auf zentrale Portal-Datenschutzerklärung/Impressum.
+- **Deploy:** `gh-pages` live als `galton-board.ingenieur-tools.de` (HTTPS aktiv). Live verifiziert.
+
 ## [V11] – 2026-08-30
 
 ### Vollständige Deutsche/Englisch-Umschaltung (analog Sun-Tracker)

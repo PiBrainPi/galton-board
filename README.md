@@ -5,7 +5,7 @@ als **eine HTML-Datei**. Edler Holzrahmen, goldene Messingnägel, glänzende Kug
 Live-Histogramm mit Normalverteilungs-Overlay, interaktiver Wahrscheinlichkeitsrechner
 sowie ausführliche Theorie.
 
-**Aktuelle Version:** `build/Galton_Board_V11.html` (DE/EN – zweisprachig)
+**Aktuelle Version:** `build/Galton_Board_V12_2026-08-31.html` (DE/EN – zweisprachig)
 
 **🌐 Live:** [https://galton-board.ingenieur-tools.de/](https://galton-board.ingenieur-tools.de/)
 
@@ -43,7 +43,7 @@ Installation, kein Server).
 ```
 Galton Board/
 ├── build/
-│   └── Galton_Board_V11.html      ← Lieferbare Datei (iteriert als _V01 … _V11)
+│   └── Galton_Board_V12_2026-08-31.html      ← Lieferbare Datei (iteriert als _V01 … _V12)
 ├── docs/
 │   ├── Physik-Modell.md           ← Formeln, Konstanten, Substep-Verfahren
 │   └── Theorie-Referenz.md        ← Mathe + Historie + Anwendungen
@@ -132,7 +132,7 @@ Das Galton Board ist als **viertes Tool** live auf dem GitHub-Pages-Portal `inge
 | **Custom Domain** | `galton-board.ingenieur-tools.de` (CNAME → `pibrainpi.github.io.`) |
 | **Lizenz** | MIT (Copyright Fabian Bussenius) |
 
-### Wie deployen (bei Änderungen an V11)
+### Wie deployen (bei Änderungen)
 
 ```bash
 cd "$HOME/Projects/Galton Board"
