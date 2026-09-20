@@ -1,5 +1,16 @@
 # Changelog – Galton Board
 
+## [V13] – 2026-09-20
+
+### DSGVO V53: Hosting-Wechsel Vercel + zentrale DS-Verlinkung
+- **Hosting-Block DE+EN:** GitHub Pages → **Vercel Inc.** (440 N Barranca Ave #4133, Covina, CA 91723,
+  USA; DPF-zertifiziert) — Quelle (`build/Galton_Board_V13_2026-09-20.html`) UND deployed Stand korrigiert.
+- **Stand-Datum** 31.08. → **20.09.2026** (DE+EN).
+- **DS-Lead DE+EN** verlinkt jetzt die zentrale Portal-DS (`ingenieur-tools.de/datenschutz.html`).
+- **Deploy:** gh-pages `2bd5758` → Vercel live `galton-board.ingenieur-tools.de` (Migration von
+  GitHub Pages am 20.09. Abend; LE-Zert bis 19.12.2026). Live verifiziert (0 GitHub-Referenzen).
+- Kontext: 50-Punkte-Plan `~/Projects/pv-wind-map/docs/DSGVO_V53_KONSOLIDIERUNG_50PUNKTE_PLAN.md`.
+
 ## [V12] – 2026-08-31
 
 ### DSGVO-Update (Datenschutz-Konformität)

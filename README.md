@@ -5,13 +5,13 @@ als **eine HTML-Datei**. Edler Holzrahmen, goldene Messingnägel, glänzende Kug
 Live-Histogramm mit Normalverteilungs-Overlay, interaktiver Wahrscheinlichkeitsrechner
 sowie ausführliche Theorie.
 
-**Aktuelle Version:** `build/Galton_Board_V12_2026-08-31.html` (DE/EN – zweisprachig)
+**Aktuelle Version:** `build/Galton_Board_V13_2026-09-20.html` (DE/EN – zweisprachig)
 
-**🌐 Live:** [https://galton-board.ingenieur-tools.de/](https://galton-board.ingenieur-tools.de/)
+**🌐 Live:** [https://galton-board.ingenieur-tools.de/](https://galton-board.ingenieur-tools.de/) (**Vercel** seit 20.09.2026)
 
 ## Schnellstart
 
-Einfach `build/Galton_Board_V12_2026-08-31.html` im Browser öffnen (Doppelklick genügt – keine
+Einfach `build/Galton_Board_V13_2026-09-20.html` im Browser öffnen (Doppelklick genügt – keine
 Installation, kein Server).
 
 ## Features
@@ -43,7 +43,7 @@ Installation, kein Server).
 ```
 Galton Board/
 ├── build/
-│   └── Galton_Board_V12_2026-08-31.html      ← Lieferbare Datei (iteriert als _V01 … _V12)
+│   └── Galton_Board_V13_2026-09-20.html      ← Lieferbare Datei (iteriert als _V01 … _V13)
 ├── docs/
 │   ├── Physik-Modell.md           ← Formeln, Konstanten, Substep-Verfahren
 │   └── Theorie-Referenz.md        ← Mathe + Historie + Anwendungen
@@ -109,9 +109,10 @@ Siehe `CHANGELOG.md`.
 Das Galton Board ist eine **vollständig lokale Anwendung** (100 % offline, keine externen
 Abhängigkeiten). Es werden **keine Cookies, kein Tracking und keine Analyse-Dienste** verwendet;
 alle Berechnungen erfolgen direkt im Browser. Der optionale Kollisions-Sound wird per WebAudio
-lokal erzeugt (keine Datenübertragung). Beim Hosting über GitHub Pages können technisch notwendige
-Server-Logdaten (IP-Adresse, Zeitpunkt) verarbeitet werden. **Impressum + Datenschutzerklärung**
-sind in der App im Footer eingebaut (Links „Impressum" / „Datenschutz").
+lokal erzeugt (keine Datenübertragung). Beim Hosting über **Vercel** können technisch notwendige
+Server-Logdaten (IP-Adresse, Zeitpunkt) verarbeitet werden (DS-Modal § Hosting, Stand 20.09.2026).
+**Impressum + Datenschutzerklärung** sind in der App im Footer eingebaut (Links „Impressum" /
+„Datenschutz"); die zentrale DS aller vier Tools: `https://ingenieur-tools.de/datenschutz.html`.
 
 **Betreiber:** Fabian Bussenius · Jüthornstraße 50 · 22043 Hamburg · fabibuss@web.de (§ 5 DDG)
 
@@ -119,17 +120,17 @@ sind in der App im Footer eingebaut (Links „Impressum" / „Datenschutz").
 
 MIT — siehe [LICENSE](LICENSE). © 2026 Fabian Bussenius.
 
-## Deployment & Hosting (Stand: 30.08.2026)
+## Deployment & Hosting (Stand: 20.09.2026 — **VERCEL**)
 
-Das Galton Board ist als **viertes Tool** live auf dem GitHub-Pages-Portal `ingenieur-tools.de`:
+Das Galton Board ist live auf **Vercel** (Projekt `galton-board`, Team pi-brain, Hobby):
 
 | Feld | Wert |
 |---|---|
-| **Live-URL** | `https://galton-board.ingenieur-tools.de/` (HTTP + HTTPS aktiv) |
-| **GitHub-Repo** | `https://github.com/PiBrainPi/galton-board` (öffentlich) |
+| **Live-URL** | `https://galton-board.ingenieur-tools.de/` (HTTPS, LE bis 19.12.26) |
+| **GitHub-Repo** | `https://github.com/PiBrainPi/galton-board` (öffentlich; GitHub-Pages = Archiv, Custom-Domain entfernt) |
 | **Quell-Branch** | `main` (build/, docs/, tests/, README, CHANGELOG, LICENSE) |
-| **Deploy-Branch** | `gh-pages` (enthält nur `index.html` = Single-File-App + `CNAME`) |
-| **Custom Domain** | `galton-board.ingenieur-tools.de` (CNAME → `pibrainpi.github.io.`) |
+| **Deploy-Basis** | `gh-pages` (enthält nur `index.html` = Single-File-App) → `scripts/deploy_vercel.sh` |
+| **Aktive Version** | `build/Galton_Board_V13_2026-09-20.html` (DSGVO V53: Vercel-Hosting-Block, Stand 20.09.) |
 | **Lizenz** | MIT (Copyright Fabian Bussenius) |
 
 ### Wie deployen (bei Änderungen)
@@ -139,17 +140,16 @@ cd "$HOME/Projects/Galton Board"
 # 1. Quell-Änderung committen (main)
 git add -A && git commit -m "Beschreibung" && git push origin main
 
-# 2. Single-File auf gh-pages-Branch aktualisieren
-git checkout gh-pages
-cp build/Galton_Board_V12_2026-08-31.html index.html
-echo "galton-board.ingenieur-tools.de" > CNAME     # bleibt erhalten
-git add index.html CNAME && git commit -m "Deploy V12-Update (DSGVO)"
-git fetch origin gh-pages && git rebase origin/gh-pages   # GitHub-CNAME-Commit einholen
-git push origin gh-pages
-git checkout main
+# 2. Neue Version als gh-pages/index.html + Vercel-Deploy:
+git worktree add /tmp/galton-pages gh-pages     # (einmalig; existiert ggf. schon)
+cp build/Galton_Board_V13_2026-09-20.html /tmp/galton-pages/index.html
+cd /tmp/galton-pages && git add index.html && git commit -m "Deploy Vx" \
+  && git pull --rebase origin gh-pages && git push origin gh-pages
+
+# 3. Vercel-Deploy:
+bash "$HOME/Projects/Galton Board/scripts/deploy_vercel.sh"
 ```
 
-> **Wichtig (Pitfall):** GitHub schreibt bei aktivem Pages automatisch einen `Create CNAME`-Commit
-> in den `gh-pages`-Branch → vor jedem Push **`git fetch` + `git rebase origin/gh-pages`**.
-> Nach `git checkout gh-pages` liegen die Quell-Dateien als **untracked** im Arbeitsbaum — normal,
-> nur `index.html` + `CNAME` ändern/committen.
+> **Pitfall (20.09. erlebt):** Deploy-Ordner MUSS eine `index.html` enthalten — eine versehentlich
+> in `index_tmp.html` umbenannte Datei führte zu einem 404 auf der Live-Domain.
+> **Deploy-Befehl:** immer `scripts/deploy_vercel.sh` (CLI + project.json + Token).
