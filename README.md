@@ -5,13 +5,13 @@ als **eine HTML-Datei**. Edler Holzrahmen, goldene Messingnägel, glänzende Kug
 Live-Histogramm mit Normalverteilungs-Overlay, interaktiver Wahrscheinlichkeitsrechner
 sowie ausführliche Theorie.
 
-**Aktuelle Version:** `build/Galton_Board_V13_2026-09-20.html` (DE/EN – zweisprachig)
+**Aktuelle Version:** `build/Galton_Board_V14_2026-09-21.html` (DE/EN – zweisprachig)
 
 **🌐 Live:** [https://galton-board.ingenieur-tools.de/](https://galton-board.ingenieur-tools.de/) (**Vercel** seit 20.09.2026)
 
 ## Schnellstart
 
-Einfach `build/Galton_Board_V13_2026-09-20.html` im Browser öffnen (Doppelklick genügt – keine
+Einfach `build/Galton_Board_V14_2026-09-21.html` im Browser öffnen (Doppelklick genügt – keine
 Installation, kein Server).
 
 ## Features
@@ -43,7 +43,7 @@ Installation, kein Server).
 ```
 Galton Board/
 ├── build/
-│   └── Galton_Board_V13_2026-09-20.html      ← Lieferbare Datei (iteriert als _V01 … _V13)
+│   └── Galton_Board_V14_2026-09-21.html      ← Lieferbare Datei (iteriert als _V01 … _V14)
 ├── docs/
 │   ├── Physik-Modell.md           ← Formeln, Konstanten, Substep-Verfahren
 │   └── Theorie-Referenz.md        ← Mathe + Historie + Anwendungen
@@ -130,7 +130,7 @@ Das Galton Board ist live auf **Vercel** (Projekt `galton-board`, Team pi-brain,
 | **GitHub-Repo** | `https://github.com/PiBrainPi/galton-board` (öffentlich; GitHub-Pages = Archiv, Custom-Domain entfernt) |
 | **Quell-Branch** | `main` (build/, docs/, tests/, README, CHANGELOG, LICENSE) |
 | **Deploy-Basis** | `gh-pages` (enthält nur `index.html` = Single-File-App) → `scripts/deploy_vercel.sh` |
-| **Aktive Version** | `build/Galton_Board_V13_2026-09-20.html` (DSGVO V53: Vercel-Hosting-Block, Stand 20.09.) |
+| **Aktive Version** | `build/Galton_Board_V14_2026-09-21.html` (V54: Analytics opt-in DE/EN, Stand 21.09.) |
 | **Lizenz** | MIT (Copyright Fabian Bussenius) |
 
 ### Wie deployen (bei Änderungen)
@@ -142,7 +142,7 @@ git add -A && git commit -m "Beschreibung" && git push origin main
 
 # 2. Neue Version als gh-pages/index.html + Vercel-Deploy:
 git worktree add /tmp/galton-pages gh-pages     # (einmalig; existiert ggf. schon)
-cp build/Galton_Board_V13_2026-09-20.html /tmp/galton-pages/index.html
+cp build/Galton_Board_V14_2026-09-21.html /tmp/galton-pages/index.html
 cd /tmp/galton-pages && git add index.html && git commit -m "Deploy Vx" \
   && git pull --rebase origin gh-pages && git push origin gh-pages
 

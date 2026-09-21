@@ -1,5 +1,24 @@
 # Changelog – Galton Board
 
+## [V14] – 2026-09-21
+
+### V54: Vercel Web Analytics opt-in (nur nach Einwilligung)
+- **DS-Modal DE+EN:** Neuer Abschnitt „Reichweitenmessung (optional, nur nach Einwilligung)“ —
+  Rechtsgrundlage Art. 6 Abs. 1 lit. a + Art. 49 Abs. 1 lit. a DSGVO (US-Transfer, DPF), Datenpunkte,
+  Widerruf, Key `pvw_analytics_consent`, § 25 TDDDG.
+- **Toggle DE+EN** im DS-Modal (`gb-va-toggle` / `gb-va-toggle-en`): AN/AUS, Zustand im
+  localStorage; Analytics-Script (`/_vercel/insights/script.js`) wird erst NACH Klick injiziert
+  (0 Requests pre-consent, Playwright-verifiziert).
+- **„Grundsatz“-Absatz DE+EN angepasst** („keine Analyse-Cookies, kein Tracking und keine
+  Webanalyse-Dienste“ → Analytics jetzt als optionaler, einwilligungspflichtiger Baustein beschrieben).
+- **Stand** 20.09. → **21.09.2026 (V54)**.
+- **Deploy:** main `9895810` / gh-pages `d0e4b84` → Vercel live. Analytics-Endpoint 404 bis zur
+  Dashboard-Aktivierung (User-Entscheid nach Beobachtungsphase).
+- Kontext: 25-Punkte-Plan `~/Projects/pv-wind-map/docs/DSGVO_V54_ANALYTICS_25PUNKTE_PLAN.md`.
+- **Bekannter Alt-Bug (seit V13, nicht V54):** `hide is not defined` beim Klick außerhalb
+  eines Tooltips (document-click-Handler nutzt scoped hide() global) — kein Funktionsverlust,
+  Mini-Fix für V15 empfohlen.
+
 ## [V13] – 2026-09-20
 
 ### DSGVO V53: Hosting-Wechsel Vercel + zentrale DS-Verlinkung
